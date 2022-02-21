@@ -88,10 +88,12 @@ Vue.component(
     require('./components/NotFound.vue').default
 );
 
+
+
 // Filter Section
 
 Vue.filter('myDate',function(created){
-    return moment(created).format('MMMM Do YYYY');
+    return moment(created).format('DD-MM-YYYY');
 });
 
 Vue.filter('yesno', value => (value ? '<i class="fas fa-check green"></i>' : '<i class="fas fa-times red"></i>'));

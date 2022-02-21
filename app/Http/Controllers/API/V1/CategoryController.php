@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\V1;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Http\Requests\Products\CategoryRequest;
 
 class CategoryController extends BaseController
 {
@@ -56,7 +57,7 @@ class CategoryController extends BaseController
      * @return \Illuminate\Http\Response
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
         $tag = $this->category->create([
             'name' => $request->get('name'),
@@ -74,7 +75,7 @@ class CategoryController extends BaseController
      * @return \Illuminate\Http\Response
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function update(Request $request, $id)
+    public function update(CategoryRequest $request, $id)
     {
         $tag = $this->category->findOrFail($id);
 

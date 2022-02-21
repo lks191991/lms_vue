@@ -1,5 +1,8 @@
 <template>
   <section class="content">
+    <div  class="loader-out" v-if="loading">
+   <div  class="loader"  ></div>
+   </div>
     <div class="container-fluid">
         <div class="row">
 
@@ -110,6 +113,7 @@
     export default {
         data () {
             return {
+				loading: false,
                 editmode: false,
                 categories : {},
                 form: new Form({
@@ -122,11 +126,11 @@
         methods: {
 
             getResults(page = 1) {
-
+				  this.loading = true
                   this.$Progress.start();
                   
                   axios.get('/api/category?page=' + page).then(({ data }) => (this.categories = data.data));
-
+					this.loading = false
                   this.$Progress.finish();
             },
             updateCategory(){
@@ -162,8 +166,11 @@
             },
 
             loadCategories(){
+				this.loading = true
                 if(this.$gate.isAdmin()){
-                    axios.get("/api/category").then(({ data }) => (this.categories = data.data));
+                    axios.get("/api/category").then(({ data }) => {this.categories = data.data;
+					this.loading = false
+					});
                 }
             },
             

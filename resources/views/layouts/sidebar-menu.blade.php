@@ -27,7 +27,14 @@
               </p>
             </router-link>
           </li>
-         
+         <li class="nav-item">
+            <router-link to="/sub-category" class="nav-link">
+              <i class="nav-icon fas fa-list-ol green"></i>
+              <p>
+                Sub Category
+              </p>
+            </router-link>
+          </li>
             
         </ul>
       </li>
@@ -64,14 +71,7 @@
         </a>
         <ul class="nav nav-treeview">
 
-          <li class="nav-item">
-            <router-link to="/product/category" class="nav-link">
-              <i class="nav-icon fas fa-list-ol green"></i>
-              <p>
-                Category
-              </p>
-            </router-link>
-          </li>
+         
           <li class="nav-item">
             <router-link to="/product/tag" class="nav-link">
               <i class="nav-icon fas fa-tags green"></i>
