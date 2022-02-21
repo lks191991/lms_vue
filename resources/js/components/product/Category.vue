@@ -41,6 +41,10 @@
                         <a href="#" @click="editModal(category)">
                             <i class="fa fa-edit blue"></i>
                         </a>
+                         |
+                        <a href="#" @click="deleteCategory(category.id)">
+                            <i class="fa fa-trash red"></i>
+                        </a>
                       </td>
                     </tr>
                   </tbody>
@@ -183,7 +187,33 @@
                         title: 'Some error occured! Please try again'
                     });
                 })
-            }
+            },
+             deleteCategory(id){
+              Swal.fire({
+                  title: 'Are you sure?',
+                  text: "You won't be able to revert this!",
+                  showCancelButton: true,
+                  confirmButtonColor: '#d33',
+                  cancelButtonColor: '#3085d6',
+                  confirmButtonText: 'Yes, delete it!'
+                  }).then((result) => {
+
+                      // Send request to the server
+                        if (result.value) {
+                              this.form.delete('/api/category/'+id).then(()=>{
+                                      Swal.fire(
+                                      'Deleted!',
+                                      'Your file has been deleted.',
+                                      'success'
+                                      );
+                                  // Fire.$emit('AfterCreate');
+                                  this.loadCategories();
+                              }).catch((data)=> {
+                                  Swal.fire("Failed!", data.message, "warning");
+                              });
+                        }
+                  })
+          },
 
         },
         mounted() {

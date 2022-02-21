@@ -82,4 +82,16 @@ class CategoryController extends BaseController
 
         return $this->sendResponse($tag, 'Category Information has been updated');
     }
+
+    public function destroy($id)
+    {
+
+        $this->authorize('isAdmin');
+
+        $category = $this->category->findOrFail($id);
+
+        $category->delete();
+
+        return $this->sendResponse($category, 'Category has been Deleted');
+    }
 }
