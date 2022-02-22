@@ -9,7 +9,7 @@ require('./bootstrap');
 window.Vue = require('vue');
 import moment from 'moment';
 
-import { Form, HasError, AlertError } from 'vform';
+import { Form, HasError, AlertError,FormData } from 'vform';
 window.Form = Form;
 
 import Gate from "./Gate";
