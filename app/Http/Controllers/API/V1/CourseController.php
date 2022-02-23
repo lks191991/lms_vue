@@ -66,7 +66,22 @@ class CourseController extends BaseController
 		$course = new Course();
 		
 		 /** Below code for save banner_image * */
+		 
+
         if ($request->hasFile('banner_image')) {
+
+			$validator = Validator::make($request->all(), [
+                        'banner_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+                            ], [
+                        'banner_image.max' => 'The banner image may not be greater than 2 mb.',
+            ]);
+			if ($validator->fails()) {
+					return response()->json([
+					'success' => false,
+					'message' => 'The banner image must be an image.',
+					'errors' => $validator->errors()
+					], 422);
+            }
 
             $destinationPath = public_path('/uploads/course/');
             $newName = '';
@@ -77,7 +92,7 @@ class CourseController extends BaseController
             $newName = date('His') . rand() . time() . '__' . $fileNameArr[0] . '.' . $fileNameExt;
 
             $file->move($destinationPath, $newName);
-
+			
             $imagePath = 'uploads/course/' . $newName;
             $course->banner_image = $imagePath;
         }
@@ -105,13 +120,27 @@ class CourseController extends BaseController
      * @return \Illuminate\Http\Response
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function update(CourseRequest $request, $id)
+    public function update(CourseRequest $request)
     {
 		
-        $course = $this->course->findOrFail($id);
+        $course = $this->course->findOrFail($request->id);
 		 /** Below code for save banner_image * */
         if ($request->hasFile('banner_image')) {
-
+			 
+			
+			$validator = Validator::make($request->all(), [
+                        'banner_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+                            ], [
+                        'banner_image.max' => 'The banner image may not be greater than 2 mb.',
+            ]);
+			if ($validator->fails()) {
+					return response()->json([
+					'success' => false,
+					'message' => 'The banner image must be an image.',
+					'errors' => $validator->errors()
+					], 422);
+            }
+			
             $destinationPath = public_path('/uploads/course/');
             $newName = '';
             $fileName = $request->all()['banner_image']->getClientOriginalName();
@@ -121,7 +150,10 @@ class CourseController extends BaseController
             $newName = date('His') . rand() . time() . '__' . $fileNameArr[0] . '.' . $fileNameExt;
 
             $file->move($destinationPath, $newName);
-
+			$oldImage = public_path($course->banner_image);
+            if (!empty($course->banner_image) && file_exists($oldImage)) {
+                unlink($oldImage);
+            }
             $imagePath = 'uploads/course/' . $newName;
             $course->banner_image = $imagePath;
         }
@@ -136,7 +168,7 @@ class CourseController extends BaseController
 			$course->status = ($request->get('status') !== null)? $request->get('status'):0;
 			$course->save();
 
-        return $this->sendResponse($tag, 'Course Information has been updated');
+        return $this->sendResponse($course, 'Course Information has been updated');
     }
 
     public function destroy($id)

@@ -22,25 +22,24 @@
                 <table class="table table-hover">
                   <thead>
                     <tr>
-                      <th>ID</th>
                       <th>Name</th>
                       <th>Description</th>
                       <th>Category</th>
 					  <th>Sub Category</th>
                       <th>Price</th>
+					  <th>Image</th>
                       <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
                      <tr v-for="product in products.data" :key="product.id">
 
-                      <td>{{product.id}}</td>
                       <td>{{product.name}}</td>
                       <td>{{product.description | truncate(30, '...')}}</td>
                       <td>{{product.category.name}}</td>
 					  <td>{{product.subcategory.name}}</td>
                       <td>{{product.price}}</td>
-                      <!-- <td><img v-bind:src="'/' + product.photo" width="100" alt="product"></td> -->
+                      <td><img v-bind:src="'/' + product.banner_image" v-if="product.banner_image" width="100" alt="product"></td>
                       <td>
                         
                         <a href="#" @click="editModal(product)">
@@ -83,59 +82,59 @@
 					<div class="form-group col-md-6">
 
                             <label>Category</label>
-                            <select class="form-control" @change="loadSubCategories(form.category_id)" :class="{ 'is-invalid': form.errors.has('category_id') }" v-model="form.category_id" enctype="multipart/form-data">
+                            <select class="form-control" @change="loadSubCategories(form.category_id)" :class="[allerros.category_id ? 'is-invalid' : '']"  v-model="form.category_id" enctype="multipart/form-data">
                               <option 
                                   v-for="(cat,index) in categories" :key="index"
                                   :value="index"
                                   :selected="index == form.category_id">{{ cat }}</option>
                             </select>
-                            <has-error :form="form" field="category_id"></has-error>
+							<div v-if="allerros.category_id" class="help-block invalid-feedback">{{ allerros.category_id[0] }}</div>
                         </div>
                         <div class="form-group col-md-6">
 
                             <label>Sub Category</label>
-                            <select class="form-control" v-model="form.sub_category_id" :class="{ 'is-invalid': form.errors.has('sub_category_id') }">
+                            <select class="form-control" v-model="form.sub_category_id" :class="[allerros.sub_category_id ? 'is-invalid' : '']">
                               <option 
                                   v-for="(cat,index) in subcategories" :key="index"
                                   :value="index"
                                   :selected="index == form.sub_category_id">{{ cat }}</option>
                             </select>
-                            <has-error :form="form" field="sub_category_id"></has-error>
+                            <div v-if="allerros.sub_category_id" class="help-block invalid-feedback">{{ allerros.sub_category_id[0] }}</div>
                         </div>
 					
                         <div class="form-group col-md-6">
                             <label>Name</label>
                             <input v-model="form.name" type="text" name="name"
-                                class="form-control" :class="{ 'is-invalid': form.errors.has('name') }">
-                            <has-error :form="form" field="name"></has-error>
+                                class="form-control" :class="[allerros.name ? 'is-invalid' : '']">
+                            <div v-if="allerros.name" class="help-block invalid-feedback">{{ allerros.name[0] }}</div>
                         </div>
                        
                         <div class="form-group col-md-3">
                             <label>Price</label>
                             <input v-model="form.price" type="text" name="price"
-                                class="form-control" :class="{ 'is-invalid': form.errors.has('price') }">
-                            <has-error :form="form" field="price"></has-error>
+                                class="form-control" :class="[allerros.price ? 'is-invalid' : '']">
+                           <div v-if="allerros.price" class="help-block invalid-feedback">{{ allerros.price[0] }}</div>
                         </div>
 						
 						<div class="form-group col-md-3">
 
                             <label>Course Type</label>
-                            <select class="form-control" v-model="form.course_type" :class="{ 'is-invalid': form.errors.has('course_type') }">
+                            <select class="form-control" v-model="form.course_type" :class="[allerros.course_type ? 'is-invalid' : '']">
                               <option value="Certified" :selected="'Certified' == form.course_type">Certified</option>
 							  <option value="Non-certified" :selected="'Non-certified' == form.course_type">Non-certified</option>
                             </select>
-                            <has-error :form="form" field="course_type"></has-error>
+                            <div v-if="allerros.course_type" class="help-block invalid-feedback">{{ allerros.course_type[0] }}</div>
                         </div>
 						<div class="form-group col-md-12">
                             <label>Demo URL</label>
                             <input v-model="form.demo_url" type="text" name="demo_url"
-                                class="form-control" :class="{ 'is-invalid': form.errors.has('demo_url') }">
-                            <has-error :form="form" field="demo_url"></has-error>
+                                class="form-control" :class="[allerros.demo_url ? 'is-invalid' : '']">
+                            <div v-if="allerros.demo_url" class="help-block invalid-feedback">{{ allerros.demo_url[0] }}</div>
                         </div>
 						<div class="form-group col-md-8">
                             <label>Image</label>
-                            <input type="file"  v-on:change="onImageChange" :class="{ 'is-invalid': form.errors.has('banner_image') }" name="banner_image">
-                        <has-error :form="form" field="banner_image"></has-error> 
+                            <input type="file"  v-on:change="onImageChange" :class="[allerros.banner_image ? 'is-invalid' : '']" name="banner_image">
+                        <div v-if="allerros.banner_image" class="help-block invalid-feedback">{{ allerros.banner_image[0] }}</div>
 						
 						
                         
@@ -150,8 +149,8 @@
 						 <div class="form-group">
                             <label>Description</label>
                             <input v-model="form.description" type="text" name="description"
-                                class="form-control" :class="{ 'is-invalid': form.errors.has('description') }">
-                            <has-error :form="form" field="description"></has-error>
+                                class="form-control" :class="[allerros.description ? 'is-invalid' : '']">
+                            <div v-if="allerros.description" class="help-block invalid-feedback">{{ allerros.description[0] }}</div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -191,10 +190,14 @@
                    	status: '',
 
                 }),
+				allerros: [],
                 categories: [],
 				subcategories: [],
                 imagePreview: null,
 				showPreview: false,
+				 imageEditPreview: null,
+				showEditPreview: false,
+				
             }
         },
         methods: {
@@ -265,9 +268,14 @@
               this.form.reset();
               $('#addNew').modal('show');
               this.form.fill(product);
+			  //console.log(product);
+			  this.showPreview = true;
+			  this.allerros = [];
+			  this.imagePreview = product.banner_image;
           },
           newModal(){
               this.editmode = false;
+			  this.allerros = [];
               this.form.reset();
               $('#addNew').modal('show');
           },
@@ -278,7 +286,8 @@
 
 				_.each(this.form, (value, key) => {
 				formData.append(key, value)
-				})
+				});
+				
               axios.post('api/course',formData)
               .then((data)=>{
                 if(data.data.success){
@@ -292,16 +301,18 @@
                   this.loadProducts();
 
                 } else {
-                  Toast.fire({
-                      icon: 'error',
-                      title: 'Some error occured! Please try again'
+					this.allerros = error.response.data.errors;
+					 Toast.fire({
+                    icon: 'error',
+                    title: error.response.data.message
                   });
+                 
 
                   this.$Progress.failed();
                 }
               })
-              .catch(()=>{
-
+              .catch((error)=>{
+					this.allerros = error.response.data.errors;
                   Toast.fire({
                       icon: 'error',
                       title: 'Some error occured! Please try again'
@@ -310,20 +321,34 @@
           },
           updateCourse(){
               this.$Progress.start();
-              this.form.put('api/course/'+this.form.id)
+			  let formData = new FormData()
+				formData.append('banner_image', this.form.banner_image)
+
+				_.each(this.form, (value, key) => {
+				formData.append(key, value)
+				})
+				
+              axios.post('api/course/update/',formData)
               .then((response) => {
                   // success
+				  this.form.reset();
                   $('#addNew').modal('hide');
+				  
                   Toast.fire({
                     icon: 'success',
                     title: response.data.message
                   });
                   this.$Progress.finish();
                       //  Fire.$emit('AfterCreate');
-
+					
                   this.loadProducts();
               })
-              .catch(() => {
+              .catch((error) => {
+				  this.allerros = error.response.data.errors;
+				  Toast.fire({
+                    icon: 'error',
+                    title: error.response.data.message
+                  });
                   this.$Progress.fail();
               });
 
@@ -365,10 +390,11 @@
             this.loadProducts();
             this.loadCategories();
             this.$Progress.finish();
+			
         },
         filters: {
             truncate: function (text, length, suffix) {
-                return text.substring(0, length) + suffix;
+                return ''//text.substring(0, length) + suffix;
             },
         },
         computed: {

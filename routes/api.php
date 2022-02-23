@@ -40,6 +40,7 @@ Route::namespace('App\\Http\\Controllers\\API\V1')->group(function () {
 	Route::get('course/list', 'CourseController@list');
 	Route::get('sub-category/list', 'SubCategoryController@list');
     Route::post('product/upload', 'ProductController@upload');
+	Route::post('course/update', 'CourseController@update');
 
     Route::apiResources([
         'user' => 'UserController',

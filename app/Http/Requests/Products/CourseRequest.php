@@ -24,9 +24,9 @@ class CourseRequest extends FormRequest
      */
     public function rules()
     {
-        if ($this->isMethod('post')) {
+        if (empty($this->id)) {
             return $this->createRules();
-        } elseif ($this->isMethod('put')) {
+        } elseif ($this->id) {
             return $this->updateRules();
         }
     }
@@ -49,7 +49,6 @@ class CourseRequest extends FormRequest
 				],
             'price' => 'required|numeric',
 			'course_type' => 'required',
-           'banner_image' => 'sometimes|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 
@@ -67,12 +66,11 @@ class CourseRequest extends FormRequest
 					'required',
 					'max:180',
 					Rule::unique('courses')->where(function ($query) {  
-						return $query->where('sub_category_id', $this->sub_category_id)->where('id','<>' ,$this->id)->whereNull('deleted_at');
+						return $query->where('sub_category_id', $this->sub_category_id)->whereNull('deleted_at')->where('id','<>' ,$this->id);
 					})
 				],
             'price' => 'required|numeric',
 			'course_type' => 'required',
-            'banner_image' => 'sometimes|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 }
