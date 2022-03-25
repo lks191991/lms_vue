@@ -16,7 +16,8 @@ import Gate from "./Gate";
 Vue.prototype.$gate = new Gate(window.user);
 
 import Swal from 'sweetalert2';
-
+import ToggleButton from 'vue-js-toggle-button'
+Vue.use(ToggleButton)
 
 const Toast = Swal.mixin({
     toast: true,
@@ -105,4 +106,4 @@ Vue.component('example-component', require('./components/ExampleComponent.vue'))
 const app = new Vue({
     el: '#app',
     router
-});
+}).$mount('#app');

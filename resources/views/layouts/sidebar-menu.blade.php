@@ -43,6 +43,14 @@
               </p>
             </router-link>
           </li> 
+		  <li class="nav-item">
+            <router-link to="/topics" class="nav-link">
+              <i class="nav-icon fas fa-list-ol green"></i>
+              <p>
+                Topics
+              </p>
+            </router-link>
+          </li> 
         </ul>
       </li>
 

@@ -8,5 +8,6 @@ export default [
     { path: '/product/category', component: require('./components/product/Category.vue').default },
 	{ path: '/sub-category', component: require('./components/product/SubCategory.vue').default },
 	{ path: '/courses', component: require('./components/product/Course.vue').default },
+	{ path: '/topics', component: require('./components/product/Topic.vue').default },
     { path: '*', component: require('./components/NotFound.vue').default }
 ];

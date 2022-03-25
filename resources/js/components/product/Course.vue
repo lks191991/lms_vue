@@ -1,5 +1,8 @@
 <template>
   <section class="content">
+  <div  class="loader-out" v-if="loading">
+   <div  class="loader"  ></div>
+   </div>
     <div class="container-fluid">
         <div class="row">
 
@@ -75,7 +78,7 @@
                     </button>
                 </div>
 
-                <form @submit.prevent="editmode ? updateCourse() : createCourse()">
+                <form @submit.prevent="editmode ? updateCourse() : createCourse()" >
                     <div class="modal-body">
 					
 					<div class="row">
@@ -83,6 +86,7 @@
 
                             <label>Category</label>
                             <select class="form-control" @change="loadSubCategories(form.category_id)" :class="[allerros.category_id ? 'is-invalid' : '']"  v-model="form.category_id" enctype="multipart/form-data">
+							 <option value=""  :selected="categories.length == 0">Select</option>
                               <option 
                                   v-for="(cat,index) in categories" :key="index"
                                   :value="index"
@@ -94,7 +98,8 @@
 
                             <label>Sub Category</label>
                             <select class="form-control" v-model="form.sub_category_id" :class="[allerros.sub_category_id ? 'is-invalid' : '']">
-                              <option 
+                             <option value="" >Select</option>
+								  <option  
                                   v-for="(cat,index) in subcategories" :key="index"
                                   :value="index"
                                   :selected="index == form.sub_category_id">{{ cat }}</option>
@@ -177,6 +182,8 @@
             return {
                 editmode: false,
                 products : {},
+				loading: false,
+                editProduct : [],
                 form: new Form({
                     id : '',
                     category_id : '',
@@ -242,36 +249,70 @@
     }
 },
           getResults(page = 1) {
-
+			this.loading = true
               this.$Progress.start();
               
               axios.get('api/course?page=' + page).then(({ data }) => (this.products = data.data));
-
+				this.loading = false
               this.$Progress.finish();
           },
-          loadProducts(){
-
-            // if(this.$gate.isAdmin()){
-              axios.get("api/course").then(({ data }) => (this.products = data.data));
-            // }
-          },
+         
+		   loadProducts(){
+				this.loading = true
+                if(this.$gate.isAdmin()){
+                    axios.get("/api/course").then(({ data }) => {this.products = data.data;
+					this.loading = false
+					});
+                }
+            },
           loadCategories(){
+
               axios.get("/api/category/list").then(({ data }) => (this.categories = data.data));
           },
 		  loadSubCategories(id){
-				axios.get("/api/sub-category/bycategory?category="+id, {
-				}).then(({ data }) => (this.subcategories = data.data));
+			  this.form.sub_category_id = '';
+				return axios.get("/api/sub-category/bycategory?category="+id, {
+				}).then(({ data }) => {
+				this.subcategories = data.data
+				return data.data
+				});
           },
-          
-          editModal(product){
+		  
+			async chieldCategorySelect(){
+				
+				 let product = this.editProduct;
+				
+				 let vl = await this.loadSubCategories(product.category_id);
+				 let catCheck = false;
+			   _.each(this.subcategories, (value, key) => {
+				  if(key==product.sub_category_id){
+						catCheck = true;
+				  } 
+				});
+			  
+			  this.form.sub_category_id = '';
+			  if(catCheck){
+				  this.form.sub_category_id = product.sub_category_id;
+			  } 
+			},
+			
+           
+          async editModal(product){
+			  
               this.editmode = true;
               this.form.reset();
-              $('#addNew').modal('show');
+              
               this.form.fill(product);
+			  this.editProduct = product;
+			  this.chieldCategorySelect();
+				
+			   
+			  $('#addNew').modal('show');
 			  //console.log(product);
 			  this.showPreview = true;
 			  this.allerros = [];
 			  this.imagePreview = product.banner_image;
+			  
           },
           newModal(){
               this.editmode = false;
@@ -382,7 +423,6 @@
 
         },
         mounted() {
-            
         },
         created() {
             this.$Progress.start();

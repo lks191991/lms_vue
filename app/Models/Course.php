@@ -14,7 +14,7 @@ class Course extends Model
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
-	protected $fillable = ['name','category_id','sub_category_id','price','course_type','demo_url','description','description'];
+	protected $fillable = ['name','category_id','sub_category_id','price','course_type','demo_url','description'];
 	
     public function category()
     {

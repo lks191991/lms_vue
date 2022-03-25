@@ -38,6 +38,7 @@ Route::namespace('App\\Http\\Controllers\\API\V1')->group(function () {
     Route::get('tag/list', 'TagController@list');
     Route::get('category/list', 'CategoryController@list');
 	Route::get('course/list', 'CourseController@list');
+	Route::get('topic/list', 'TopicController@list');
 	Route::get('sub-category/list', 'SubCategoryController@list');
     Route::post('product/upload', 'ProductController@upload');
 	Route::post('course/update', 'CourseController@update');
@@ -48,6 +49,7 @@ Route::namespace('App\\Http\\Controllers\\API\V1')->group(function () {
         'category' => 'CategoryController',
 		'subcategory' => 'SubCategoryController',
 		'course' => 'CourseController',
+		'topic' => 'TopicController',
         'tag' => 'TagController',
     ]);
 });
