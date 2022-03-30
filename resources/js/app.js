@@ -12,6 +12,9 @@ import moment from 'moment';
 import { Form, HasError, AlertError,FormData } from 'vform';
 window.Form = Form;
 
+import Editor from '@tinymce/tinymce-vue';
+Vue.component('editor', Editor);
+
 import Gate from "./Gate";
 Vue.prototype.$gate = new Gate(window.user);
 
@@ -50,6 +53,7 @@ Vue.component(AlertError.name, AlertError)
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 import routes from './routes';
+
 
 const router = new VueRouter({
     mode: 'history',
@@ -103,7 +107,14 @@ Vue.filter('yesno', value => (value ? '<i class="fas fa-check green"></i>' : '<i
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 
+Vue.filter('stripHTML', function (value) {
+    const div = document.createElement('div')
+    div.innerHTML = value
+    const text = div.textContent || div.innerText || ''
+    return text
+  });
+  
 const app = new Vue({
     el: '#app',
-    router
+    router,
 }).$mount('#app');

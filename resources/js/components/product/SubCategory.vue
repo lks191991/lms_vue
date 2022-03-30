@@ -46,11 +46,11 @@
                       <td>{{subcategory.created_at | myDate}}</td>
                       <td>
 
-                        <a href="#" @click="editModal(subcategory)">
+                        <a href="javascript:;" @click="editModal(subcategory)">
                             <i class="fa fa-edit blue"></i>
                         </a>
                          |
-                        <a href="#" @click="deleteCategory(subcategory.id)">
+                        <a href="javascript:;" @click="deleteCategory(subcategory.id)">
                             <i class="fa fa-trash red"></i>
                         </a>
                       </td>

@@ -31,17 +31,23 @@ Route::namespace('App\\Http\\Controllers\\API\V1')->group(function () {
 	Route::get('get-category', 'CommonController@getCategorySelect');
 	Route::get('sub-category/bycategory', 'CommonController@getSubCategorySelect');
 	Route::get('course/bycategoryorsub', 'CommonController@getCoursesSelect');
+    Route::get('topics/bycourse', 'CommonController@getTopicByCourseSelect');
 	
     Route::get('profile', 'ProfileController@profile');
     Route::put('profile', 'ProfileController@updateProfile');
     Route::post('change-password', 'ProfileController@changePassword');
-    Route::get('tag/list', 'TagController@list');
+   // Route::get('tag/list', 'TagController@list');
     Route::get('category/list', 'CategoryController@list');
 	Route::get('course/list', 'CourseController@list');
 	Route::get('topic/list', 'TopicController@list');
 	Route::get('sub-category/list', 'SubCategoryController@list');
     Route::post('product/upload', 'ProductController@upload');
-	Route::post('course/update', 'CourseController@update');
+	Route::post('videos/update', 'VideoController@update');
+    Route::post('course/update', 'CourseController@update');
+    Route::get('students', 'UserController@students');
+    Route::get('tutors', 'UserController@tutors');
+    Route::get('settings', 'SettingController@index');
+    Route::post('settings', 'SettingController@store');
 
     Route::apiResources([
         'user' => 'UserController',
@@ -50,6 +56,8 @@ Route::namespace('App\\Http\\Controllers\\API\V1')->group(function () {
 		'subcategory' => 'SubCategoryController',
 		'course' => 'CourseController',
 		'topic' => 'TopicController',
-        'tag' => 'TagController',
+        'page' => 'PageController',
+        'videos' => 'VideoController',
+        'coupons' => 'CouponController',
     ]);
 });

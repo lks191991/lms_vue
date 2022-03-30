@@ -21,7 +21,7 @@ class User extends Authenticatable // implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'type'
+        'name', 'email', 'password', 'type','email_verified_at','contact','dob','status'
     ];
 
     /**
@@ -75,5 +75,10 @@ class User extends Authenticatable // implements MustVerifyEmail
     public function isUser()
     {
         return $this->roles()->where('name', 'User')->exists();
+    }
+
+    public function isStudent()
+    {
+        return $this->roles()->where('name', 'Student')->exists();
     }
 }

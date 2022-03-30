@@ -38,14 +38,14 @@
                       <td>{{category.id}}</td>
                       <td class="text-capitalize">{{category.name}}</td>
                       <td>{{category.description}}</td>
-                      <td>{{category.created_at}}</td>
+                      <td>{{category.created_at | myDate}}</td>
                       <td>
 
-                        <a href="#" @click="editModal(category)">
+                        <a href="javascript:;" @click="editModal(category)">
                             <i class="fa fa-edit blue"></i>
                         </a>
                          |
-                        <a href="#" @click="deleteCategory(category.id)">
+                        <a href="javascript:;" @click="deleteCategory(category.id)">
                             <i class="fa fa-trash red"></i>
                         </a>
                       </td>

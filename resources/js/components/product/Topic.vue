@@ -47,11 +47,11 @@
 					  <td :inner-html.prop="data.status | yesno"></td>
                       <td>
 
-                        <a href="#" @click="editModal(data)">
+                        <a href="javascript:;" @click="editModal(data)">
                             <i class="fa fa-edit blue"></i>
                         </a>
                          |
-                        <a href="#" @click="deleteResult(data.id)">
+                        <a href="javascript:;" @click="deleteResult(data.id)">
                             <i class="fa fa-trash red"></i>
                         </a>
                       </td>
@@ -201,11 +201,11 @@
                 $('#addNew').modal('show');
 				if(topic.status==1)
 				{
-				this.form.status = true;
+				topic.status = true;
 				}
 				else
 				{
-					this.form.status = false;
+					topic.status = false;
 				}
                 this.form.fill(topic);
 				

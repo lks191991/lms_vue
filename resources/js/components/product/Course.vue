@@ -45,11 +45,11 @@
                       <td><img v-bind:src="'/' + product.banner_image" v-if="product.banner_image" width="100" alt="product"></td>
                       <td>
                         
-                        <a href="#" @click="editModal(product)">
+                        <a href="javascript:;" @click="editModal(product)">
                             <i class="fa fa-edit blue"></i>
                         </a>
                         /
-                        <a href="#" @click="deleteProduct(product.id)">
+                        <a href="javascript:;" @click="deleteProduct(product.id)">
                             <i class="fa fa-trash red"></i>
                         </a>
                       </td>

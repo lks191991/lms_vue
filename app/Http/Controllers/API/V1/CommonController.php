@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\SubCategory;
 use App\Models\Course;
+use App\Models\Topic;
 use Illuminate\Http\Request;
 use App\Http\Requests\Products\SubCategoryRequest;
 
@@ -68,6 +69,21 @@ class CommonController extends BaseController
 		}
 		
         return $this->sendResponse($courses, 'Courses list');
+    }
+
+    public function getTopicByCourseSelect(Request $request)
+    {
+		$data = $request->all();
+		if(isset($data['course']) && !empty($data['course']))
+		{
+			$courses = Topic::where('course_id',$data['course'])->pluck('name', 'id');
+		}
+		else
+		{
+			$courses = Topic::pluck('name', 'id');
+		}
+		
+        return $this->sendResponse($courses, 'Topic list');
     }
 
 }

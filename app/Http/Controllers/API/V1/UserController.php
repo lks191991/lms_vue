@@ -6,7 +6,7 @@ use App\Http\Requests\Users\UserRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Gate;
-
+use Carbon\Carbon;
 
 class UserController extends BaseController
 {
@@ -34,8 +34,40 @@ class UserController extends BaseController
 
         $users = User::latest()->paginate(10);
 
+        return $this->sendResponse($users, 'admin list');
+    }
+
+     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function students()
+    {
+       
+        if (!Gate::allows('isAdmin')) {
+            return $this->unauthorizedResponse();
+        }
+        // $this->authorize('isAdmin');
+
+        $users = User::where("type",'student')->latest()->paginate(10);
+
         return $this->sendResponse($users, 'Users list');
     }
+
+    public function tutors()
+    {
+       
+        if (!Gate::allows('isAdmin')) {
+            return $this->unauthorizedResponse();
+        }
+        // $this->authorize('isAdmin');
+
+        $users = User::where("type",'user')->latest()->paginate(10);
+
+        return $this->sendResponse($users, 'Users list');
+    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -54,6 +86,10 @@ class UserController extends BaseController
             'email' => $request['email'],
             'password' => Hash::make($request['password']),
             'type' => $request['type'],
+            'contact' => $request['contact'],
+            'dob' => date("Y-m-d",strtotime($request['dob'])),
+            'email_verified_at' =>  Carbon::now(),
+            'status' => ($request->get('status') !== null)? $request->get('status'):0,
         ]);
 
         return $this->sendResponse($user, 'User Created Successfully');
@@ -75,6 +111,12 @@ class UserController extends BaseController
         if (!empty($request->password)) {
             $request->merge(['password' => Hash::make($request['password'])]);
         }
+
+        if (!empty($request->dob)) {
+            $request->merge(['dob' => date("Y-m-d",strtotime($request['dob']))]);
+        }
+        
+       
 
         $user->update($request->all());
 
