@@ -100,11 +100,12 @@ class CourseController extends BaseController
 			$course->name  =  $request->get('name');
 			$course->category_id =  $request->get('category_id');
 			$course->sub_category_id =  $request->get('sub_category_id');
+			$course->total_length_minutes =  $request->get('total_length_minutes');
 			$course->price  =  $request->get('price');
 			$course->course_type =  $request->get('course_type');
 			$course->demo_url =  $request->get('demo_url');
 			$course->description  =  $request->get('description');
-			$course->status = ($request->get('status') !== null)? $request->get('status'):0;
+			//$course->status = ($request->get('status') !== null)? $request->get('status'):0;
 			$course->save();
 		
         
@@ -158,14 +159,16 @@ class CourseController extends BaseController
             $course->banner_image = $imagePath;
         }
 		
+		
 			$course->name  =  $request->get('name');
 			$course->category_id =  $request->get('category_id');
 			$course->sub_category_id =  $request->get('sub_category_id');
 			$course->price  =  $request->get('price');
 			$course->course_type =  $request->get('course_type');
 			$course->demo_url =  $request->get('demo_url');
+			$course->total_length_minutes =  $request->get('total_length_minutes');
 			$course->description  =  $request->get('description');
-			$course->status = ($request->get('status') !== null)? $request->get('status'):0;
+			//$course->status = ($request->get('status') !== null)? $request->get('status'):0;
 			$course->save();
 
         return $this->sendResponse($course, 'Course Information has been updated');

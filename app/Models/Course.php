@@ -14,8 +14,10 @@ class Course extends Model
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
-	protected $fillable = ['name','category_id','sub_category_id','price','course_type','demo_url','description'];
-	
+	protected $fillable = ['name','category_id','sub_category_id','price','course_type','demo_url','description','status'];
+	protected $casts = [
+        'status' => 'boolean',
+    ];
     public function category()
     {
         return $this->belongsTo(Category::class);

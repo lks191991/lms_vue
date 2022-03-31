@@ -30,7 +30,9 @@
                       <th>Category</th>
 					  <th>Sub Category</th>
                       <th>Price</th>
-					  <th>Image</th>
+					  <th>Total Length</th>
+					  <th>Status</th>
+					   <th>Image</th>
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -42,6 +44,8 @@
                       <td>{{product.category.name}}</td>
 					  <td>{{product.subcategory.name}}</td>
                       <td>{{product.price}}</td>
+					   <td>{{product.total_length_minutes}}</td>
+					   <td :inner-html.prop="product.status | yesno"></td>
                       <td><img v-bind:src="'/' + product.banner_image" v-if="product.banner_image" width="100" alt="product"></td>
                       <td>
                         
@@ -82,7 +86,16 @@
                     <div class="modal-body">
 					
 					<div class="row">
-					<div class="form-group col-md-6">
+					<div class="form-group col-md-4">
+
+                            <label>Course Type</label>
+                            <select class="form-control" v-model="form.course_type" :class="[allerros.course_type ? 'is-invalid' : '']">
+                              <option value="Certified" :selected="'Certified' == form.course_type">Certified</option>
+							  <option value="Non-certified" :selected="'Non-certified' == form.course_type">Non-certified</option>
+                            </select>
+                            <div v-if="allerros.course_type" class="help-block invalid-feedback">{{ allerros.course_type[0] }}</div>
+                        </div>
+					<div class="form-group col-md-4">
 
                             <label>Category</label>
                             <select class="form-control" @change="loadSubCategories(form.category_id)" :class="[allerros.category_id ? 'is-invalid' : '']"  v-model="form.category_id" enctype="multipart/form-data">
@@ -94,7 +107,7 @@
                             </select>
 							<div v-if="allerros.category_id" class="help-block invalid-feedback">{{ allerros.category_id[0] }}</div>
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
 
                             <label>Sub Category</label>
                             <select class="form-control" v-model="form.sub_category_id" :class="[allerros.sub_category_id ? 'is-invalid' : '']">
@@ -120,16 +133,13 @@
                                 class="form-control" :class="[allerros.price ? 'is-invalid' : '']">
                            <div v-if="allerros.price" class="help-block invalid-feedback">{{ allerros.price[0] }}</div>
                         </div>
-						
 						<div class="form-group col-md-3">
-
-                            <label>Course Type</label>
-                            <select class="form-control" v-model="form.course_type" :class="[allerros.course_type ? 'is-invalid' : '']">
-                              <option value="Certified" :selected="'Certified' == form.course_type">Certified</option>
-							  <option value="Non-certified" :selected="'Non-certified' == form.course_type">Non-certified</option>
-                            </select>
-                            <div v-if="allerros.course_type" class="help-block invalid-feedback">{{ allerros.course_type[0] }}</div>
+                            <label>Total Length In Minutes</label>
+                            <input v-model="form.total_length_minutes" type="text" name="total_length_minutes"
+                                class="form-control" :class="[allerros.total_length_minutes ? 'is-invalid' : '']">
+                           <div v-if="allerros.total_length_minutes" class="help-block invalid-feedback">{{ allerros.total_length_minutes[0] }}</div>
                         </div>
+						
 						<div class="form-group col-md-12">
                             <label>Demo URL</label>
                             <input v-model="form.demo_url" type="text" name="demo_url"
@@ -156,6 +166,11 @@
                             <input v-model="form.description" type="text" name="description"
                                 class="form-control" :class="[allerros.description ? 'is-invalid' : '']">
                             <div v-if="allerros.description" class="help-block invalid-feedback">{{ allerros.description[0] }}</div>
+                        </div>
+						<div class="form-group">
+                            <label>Status</label>
+                            <toggle-button  :value="form.status" :sync="true" v-model="form.status" :labels="{checked: 'Yes', unchecked: 'No'}"  />
+							
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -191,10 +206,11 @@
                     name: '',
 					price: '',
 					course_type: '',
+					total_length_minutes:'',
 					demo_url: '',
                     description: '',
                     banner_image: null,
-                   	status: '',
+                   	status: false,
 
                 }),
 				allerros: [],
@@ -301,7 +317,14 @@
 			  
               this.editmode = true;
               this.form.reset();
-              
+			if(product.status==1)
+			{
+			product.status = true;
+			}
+			else
+			{
+			product.status = false;
+			}
               this.form.fill(product);
 			  this.editProduct = product;
 			  this.chieldCategorySelect();

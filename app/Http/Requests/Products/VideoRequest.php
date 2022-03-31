@@ -41,9 +41,8 @@ class VideoRequest extends FormRequest
             'course_id' => 'required',
 			'video_url' => 'required',
             'topic_id' => 'required',
-            'tutor_id' => 'required',
+            //'tutor_id' => 'required',
             'name' => 'required|max:254',
-            'video_url' => 'video_url'
         ];
     }
 
@@ -58,9 +57,8 @@ class VideoRequest extends FormRequest
             'course_id' => 'required',
 			'video_url' => 'required',
             'topic_id' => 'required',
-            'tutor_id' => 'required',
+           // 'tutor_id' => 'required',
             'name' => 'required|max:254',
-            'video_url' => 'video_url'
         ];
     }
 }

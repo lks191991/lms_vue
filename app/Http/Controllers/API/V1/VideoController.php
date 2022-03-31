@@ -33,7 +33,7 @@ class VideoController extends BaseController
      */
     public function index()
     {
-        $videos = $this->video->latest()->paginate(10);
+        $videos = $this->video->with('course','topic','user')->latest()->paginate(10);
 
         return $this->sendResponse($videos, 'videos list');
     }
@@ -62,18 +62,17 @@ class VideoController extends BaseController
      */
     public function store(VideoRequest $request)
     {
-		$video = new Video();
+			$video = new Video();
 		
-		 /** Below code for save banner_image * */
-       
+		
+			
 			$video->name  =  $request->get('name');
 			$video->course_id =  $request->get('course_id');
 			$video->video_url =  $request->get('video_url');
-			$video->topic_id   =  $request->get('topic_id ');
-			$video->tutor_id =  $request->get('tutor_id');
+			$video->topic_id   =  $request->get('topic_id');
 			$video->user_id =  auth()->user()->id;
 			$video->description  =  $request->get('description');
-			$video->status = ($request->get('status') !== null)? $request->get('status'):0;
+			//$video->status = ($request->get('status') !== null)? $request->get('status'):0;
 			$video->save();
 		
         
@@ -93,17 +92,47 @@ class VideoController extends BaseController
     {
 		
         $video = $this->video->findOrFail($request->id);
+		/** Below code for save banner_image * */
+		 
+
+        if ($request->hasFile('video_note')) {
+
+			$validator = Validator::make($request->all(), [
+                        'video_note' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+                            ], [
+                        'video_note.max' => 'The banner image may not be greater than 2 mb.',
+            ]);
+			if ($validator->fails()) {
+					return response()->json([
+					'success' => false,
+					'message' => 'The banner image must be an image.',
+					'errors' => $validator->errors()
+					], 422);
+            }
+
+            $destinationPath = public_path('/uploads/video_note/');
+            $newName = '';
+            $fileName = $request->all()['video_note']->getClientOriginalName();
+            $file = request()->file('video_note');
+            $fileNameArr = explode('.', $fileName);
+            $fileNameExt = end($fileNameArr);
+            $newName = date('His') . rand() . time() . '__' . $fileNameArr[0] . '.' . $fileNameExt;
+
+            $file->move($destinationPath, $newName);
+			
+            $imagePath = 'uploads/video_note/' . $newName;
+            $video->video_note = $imagePath;
+        }
 		
         $video->name  =  $request->get('name');
         $video->course_id =  $request->get('course_id');
         $video->video_url =  $request->get('video_url');
-        $video->topic_id   =  $request->get('topic_id ');
-        $video->tutor_id =  $request->get('tutor_id');
+        $video->topic_id   =  $request->get('topic_id');
         $video->description  =  $request->get('description');
-        $video->status = ($request->get('status') !== null)? $request->get('status'):0;
+       // $video->status = ($request->get('status') !== null)? $request->get('status'):0;
         $video->save();
 
-        return $this->sendResponse($course, 'Video Information has been updated');
+        return $this->sendResponse($video, 'Video Information has been updated');
     }
 
     public function destroy($id)
@@ -115,6 +144,6 @@ class VideoController extends BaseController
 
         $video->delete();
 
-        return $this->sendResponse($video, 'Course has been Deleted');
+        return $this->sendResponse($video, 'video has been Deleted');
     }
 }

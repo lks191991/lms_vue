@@ -48,6 +48,7 @@ class CourseRequest extends FormRequest
 					})
 				],
             'price' => 'required|numeric',
+			'total_length_minutes' => 'required|numeric',
 			'course_type' => 'required',
         ];
     }
@@ -70,6 +71,7 @@ class CourseRequest extends FormRequest
 					})
 				],
             'price' => 'required|numeric',
+			'total_length_minutes' => 'required|numeric',
 			'course_type' => 'required',
         ];
     }

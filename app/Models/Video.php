@@ -16,7 +16,10 @@ class Video extends Model
     use SoftDeletes;
     
     
-    
+    protected $casts = [
+        'status' => 'boolean',
+    ];
+	
     /*
      * Get referenced record of course.
      */
@@ -25,19 +28,6 @@ class Video extends Model
         return $this->belongsTo(Course::Class, 'course_id')->withDefault();
     }
 
-    public function classroom()
-    {
-        return $this->belongsTo(Classroom::Class, 'classroom_id')->withDefault();
-    }
-    
-    /*
-     * Get referenced record of subject.
-     */
-    public function subject()
-    {
-        return $this->belongsTo(Subject::Class, 'subject_id')->withDefault();
-    }
-    
     /*
      * Get referenced record of topic.
      */
@@ -50,9 +40,9 @@ class Video extends Model
     /*
      * Get referenced record of tutor.
      */
-    public function tutor()
+    public function user()
     {
-        return $this->belongsTo(Tutor::Class, 'tutor_id','user_id')->withDefault();
+        return $this->belongsTo(User::Class, 'user_id')->withDefault();
     }
 
     

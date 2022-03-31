@@ -28,6 +28,9 @@
                       <th>Name</th>
                       <th>Course</th>
 					  <th>Topic</th>
+					  <th>User</th>
+					  <th>Description</th>
+					   <th>Status</th>
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -35,8 +38,11 @@
                      <tr v-for="video in videos.data" :key="video.id">
 
                       <td>{{video.name}}</td>
-                      <td></td>
-					  <td></td>
+					  <td>{{video.course.name}}</td>
+					  <td>{{video.topic.name}}</td>
+					  <td>{{video.user.name}}</td>
+					  <td>{{video.description | truncate(30, '...')}}</td>
+					  <td :inner-html.prop="video.status | yesno"></td>
                       <td>
                         
                         <a href="javascript:;" @click="editModal(video)">
@@ -108,21 +114,12 @@
                             <div v-if="allerros.name" class="help-block invalid-feedback">{{ allerros.name[0] }}</div>
                         </div>
                        
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-6">
                             <label>Video_url</label>
                             <input v-model="form.video_url" type="text" name="video_url"
                                 class="form-control" :class="[allerros.price ? 'is-invalid' : '']">
                            <div v-if="allerros.video_url" class="help-block invalid-feedback">{{ allerros.video_url[0] }}</div>
                         </div>
-						
-						
-						<div class="form-group col-md-12">
-                            <label>Demo URL</label>
-                            <input v-model="form.demo_url" type="text" name="demo_url"
-                                class="form-control" :class="[allerros.demo_url ? 'is-invalid' : '']">
-                            <div v-if="allerros.demo_url" class="help-block invalid-feedback">{{ allerros.demo_url[0] }}</div>
-                        </div>
-						
 						
                         
 						 <div class="form-group col-md-12">
@@ -130,6 +127,22 @@
                             <input v-model="form.description" type="text" name="description"
                                 class="form-control" :class="[allerros.description ? 'is-invalid' : '']">
                             <div v-if="allerros.description" class="help-block invalid-feedback">{{ allerros.description[0] }}</div>
+                        </div>
+						<div class="form-group col-md-8">
+                            <label>Video Note</label>
+                            <input type="file"  v-on:change="onImageChange" :class="[allerros.video_note ? 'is-invalid' : '']" name="video_note">
+                        <div v-if="allerros.video_note" class="help-block invalid-feedback">{{ allerros.video_note[0] }}</div>
+						
+						
+                        
+                        </div>
+						 <div class="form-group col-md-4">
+                            <img v-bind:src="imagePreview" width="50" height="50" v-show="showPreview"/>
+                        </div>
+						<div class="form-group col-md-12">
+                            <label>Status</label>
+                            <toggle-button  :value="form.status" :sync="true" v-model="form.status" :labels="{checked: 'Yes', unchecked: 'No'}"  />
+							
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -165,20 +178,62 @@
 					video_url : '',
                     name: '',
 					topic_id: '',
-					tutor_id: '',
+					video_note: null,
                     description: '',
-                   	status: '',
+                   status: false,
 
                 }),
 				allerros: [],
                 courses: [],
 				topics: [],
-               
+                imagePreview: null,
+				showPreview: false,
+				 imageEditPreview: null,
+				showEditPreview: false,
 				
             }
         },
         methods: {
-		
+		onImageChange(event){
+    /*
+    Set the local file variable to what the user has selected.
+    */
+    this.form.video_note = event.target.files[0];
+
+    /*
+    Initialize a File Reader object
+    */
+    let reader  = new FileReader();
+
+    /*
+    Add an event listener to the reader that when the file
+    has been loaded, we flag the show preview as true and set the
+    image to be what was read from the reader.
+    */
+    reader.addEventListener("load", function () {
+        this.showPreview = true;
+        this.imagePreview = reader.result;
+    }.bind(this), false);
+
+    /*
+    Check to see if the file is not empty.
+    */
+    if( this.form.video_note ){
+        /*
+            Ensure the file is an image file.
+        */
+        if ( /\.(jpe?g|png|gif)$/i.test( this.form.video_note.name ) ) {
+
+            console.log("here");
+            /*
+            Fire the readAsDataURL method which will read the file in and
+            upon completion fire a 'load' event which we will listen to and
+            display the image in the preview.
+            */
+            reader.readAsDataURL( this.form.video_note );
+        }
+    }
+},
           getResults(page = 1) {
 			this.loading = true
               this.$Progress.start();
@@ -197,7 +252,7 @@
                 }
             },
           loadCourses(){
-
+			
               axios.get("/api/course/list").then(({ data }) => (this.courses = data.data));
           },
 		  loadTopics(id){
@@ -211,19 +266,19 @@
 		  
 			async chieldCategorySelect(){
 				
-				 let product = this.editVideo;
+				 let video = this.editVideo;
 				
 				 let vl = await this.loadTopics(video.course_id);
 				 let catCheck = false;
 			   _.each(this.topics, (value, key) => {
-				  if(key==video.topic){
+				  if(key==video.topic_id){
 						catCheck = true;
 				  } 
 				});
 			  
 			  this.form.topic_id = '';
 			  if(catCheck){
-				  this.form.topic_id = product.topic_id;
+				  this.form.topic_id = video.topic_id;
 			  } 
 			},
 			
@@ -232,7 +287,14 @@
 			  
               this.editmode = true;
               this.form.reset();
-              
+              if(video.status==1)
+				{
+				video.status = true;
+				}
+				else
+				{
+				video.status = false;
+				}
               this.form.fill(video);
 			  this.editVideo = video;
 			  this.chieldCategorySelect();
@@ -242,7 +304,7 @@
 			  //console.log(product);
 			  this.showPreview = true;
 			  this.allerros = [];
-			  
+			   this.imagePreview = video.video_note;
           },
           newModal(){
               this.editmode = false;
@@ -253,7 +315,7 @@
           createVideo(){
               this.$Progress.start();
 				let formData = new FormData()
-				//formData.append('banner_image', this.form.banner_image)
+				formData.append('video_note', this.form.video_note)
 
 				_.each(this.form, (value, key) => {
 				formData.append(key, value)
@@ -293,7 +355,7 @@
           updateVideo(){
               this.$Progress.start();
 			  let formData = new FormData()
-				//formData.append('banner_image', this.form.banner_image)
+				formData.append('video_note', this.form.video_note)
 
 				_.each(this.form, (value, key) => {
 				formData.append(key, value)
