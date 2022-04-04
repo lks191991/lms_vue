@@ -2,7 +2,7 @@
 <nav class="mt-2">
     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
       <li class="nav-item">
-        <router-link to="/dashboard" class="nav-link">
+        <router-link to="/admin/dashboard" class="nav-link">
           <i class="nav-icon fas fa-tachometer-alt blue"></i>
           <p>
             Dashboard
@@ -21,7 +21,7 @@
         <ul class="nav nav-treeview">
 
           <li class="nav-item">
-            <router-link to="/product/category" class="nav-link">
+            <router-link to="/admin/course_manager/category" class="nav-link">
               <i class="nav-icon fas fa-list-ol green"></i>
               <p>
                 Category
@@ -29,7 +29,7 @@
             </router-link>
           </li>
          <li class="nav-item">
-            <router-link to="/sub-category" class="nav-link">
+            <router-link to="/admin/course_manager/sub-category" class="nav-link">
               <i class="nav-icon fas fa-list-ol green"></i>
               <p>
                 Sub Category
@@ -37,7 +37,7 @@
             </router-link>
           </li>
            <li class="nav-item">
-            <router-link to="/courses" class="nav-link">
+            <router-link to="/admin/course_manager/courses" class="nav-link">
               <i class="nav-icon fas fa-list-ol green"></i>
               <p>
                 Courses
@@ -45,7 +45,7 @@
             </router-link>
           </li> 
 		  <li class="nav-item">
-            <router-link to="/topics" class="nav-link">
+            <router-link to="/admin/course_manager/topics" class="nav-link">
               <i class="nav-icon fas fa-list-ol green"></i>
               <p>
                 Topics
@@ -53,7 +53,7 @@
             </router-link>
           </li> 
           <li class="nav-item">
-            <router-link to="/videos" class="nav-link">
+            <router-link to="/admin/course_manager/videos" class="nav-link">
               <i class="nav-icon fas fa-video green"></i>
               <p>
               Videos
@@ -77,7 +77,7 @@
         <ul class="nav nav-treeview">
 
           <li class="nav-item">
-            <router-link to="/students" class="nav-link">
+            <router-link to="/admin/students" class="nav-link">
               <i class="nav-icon fas fa-user-graduate green"></i>
               <p>
                 Students
@@ -85,7 +85,7 @@
             </router-link>
           </li>
          <li class="nav-item">
-            <router-link to="/tutors" class="nav-link">
+            <router-link to="/admin/tutors" class="nav-link">
               <i class="nav-icon fas fa-chalkboard-teacher green"></i>
               <p>
                 Tutors
@@ -99,7 +99,7 @@
       @endcan
       @can('isAdmin')
       <li class="nav-item">
-        <router-link to="/coupons" class="nav-link">
+        <router-link to="/admin/coupons" class="nav-link">
           <i class="nav-icon fas fa-gift orange"></i>
           <p>
           Coupons
@@ -107,8 +107,31 @@
         </router-link>
       </li>
       @endcan
-
       @can('isAdmin')
+      <li class="nav-item has-treeview">
+        <a href="#" class="nav-link">
+          <i class="nav-icon fas fa-list blue"></i>
+          <p>
+          Quiz Management
+            <i class="right fas fa-angle-left"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+
+         
+          <li class="nav-item">
+            <router-link to="/admin/quiz_manager" class="nav-link">
+              <i class="nav-icon fa fa-question green"></i>
+              <p>
+                Qns And Ans
+              </p>
+            </router-link>
+          </li>
+          
+        </ul>
+      </li>
+
+      
       <li class="nav-item has-treeview">
         <a href="#" class="nav-link">
           <i class="nav-icon fas fa-cog green"></i>
@@ -121,15 +144,15 @@
 
          
           <li class="nav-item">
-            <router-link to="/product/pages" class="nav-link">
-              <i class="nav-icon fas fa-copy green"></i>
+            <router-link to="/admin/pages" class="nav-link">
+              <i class="nav-icon fas fa-copy orange"></i>
               <p>
                 Pages
               </p>
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/site-setting" class="nav-link">
+            <router-link to="/admin/site-setting" class="nav-link">
               <i class="nav-icon fas fa-cogs orange"></i>
               <p>
                 Site Settings
@@ -137,6 +160,14 @@
             </router-link>
           </li>
            
+          <li class="nav-item">
+            <router-link to="/admin/sliders" class="nav-link">
+              <i class="nav-icon fa fa-image orange"></i>
+              <p>
+              Sliders Images
+              </p>
+            </router-link>
+          </li>
         </ul>
       </li>
 

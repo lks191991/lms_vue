@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 30, 2022 at 05:06 AM
+-- Generation Time: Apr 04, 2022 at 05:30 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -94,8 +94,9 @@ CREATE TABLE `courses` (
   `course_type` enum('Certified','Non-certified') COLLATE utf8mb4_unicode_ci NOT NULL,
   `price` decimal(10,2) NOT NULL,
   `demo_url` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `total_length_minutes` int(11) DEFAULT NULL,
   `banner_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
+  `status` tinyint(1) NOT NULL DEFAULT 1,
   `user_id` char(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `uuid` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -108,12 +109,12 @@ CREATE TABLE `courses` (
 -- Dumping data for table `courses`
 --
 
-INSERT INTO `courses` (`id`, `name`, `category_id`, `sub_category_id`, `course_type`, `price`, `demo_url`, `banner_image`, `status`, `user_id`, `uuid`, `description`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'test', 1, 1, 'Non-certified', '21.00', 'test', NULL, 0, NULL, 'f785d9c6-7d9f-4811-a610-fd5ae14a1bb1', NULL, '2022-02-22 04:06:20', '2022-03-01 03:42:45', NULL),
-(2, 'sas', 3, 1, 'Certified', '212.00', '12', NULL, 0, NULL, '0c794501-3fa6-4bac-b7c2-2b220bfa0f0c', '1', '2022-02-22 05:15:51', '2022-02-22 05:16:09', '2022-02-22 05:16:09'),
-(3, 'sas', 2, 2, 'Certified', '212.00', '12', NULL, 0, NULL, '685a2d18-9d00-48a6-9c5c-1f72b928c0b5', '12', '2022-02-22 05:52:09', '2022-03-01 06:08:25', NULL),
-(4, 'sasasas', 3, 1, 'Certified', '24.00', 'sasas', 'uploads/course/0703515133937341645599831__Chemistry.jpg', 0, NULL, '9392da61-ffb3-4d98-b65e-145d83c97b31', 'asa', '2022-02-22 08:15:26', '2022-02-23 03:41:08', NULL),
-(5, 'Test 2', 3, 1, 'Non-certified', '100.00', 'sd', 'uploads/course/07045617540142241645599896__Course4.jfif', 0, NULL, '922c8954-8565-4af7-bc91-2a9f6009b3ea', 'null', '2022-02-23 01:23:42', '2022-03-01 05:29:57', NULL);
+INSERT INTO `courses` (`id`, `name`, `category_id`, `sub_category_id`, `course_type`, `price`, `demo_url`, `total_length_minutes`, `banner_image`, `status`, `user_id`, `uuid`, `description`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'test', 1, 1, 'Non-certified', '21.00', 'test', NULL, NULL, 0, NULL, 'f785d9c6-7d9f-4811-a610-fd5ae14a1bb1', NULL, '2022-02-22 04:06:20', '2022-03-01 03:42:45', NULL),
+(2, 'sas', 3, 1, 'Certified', '212.00', '12', NULL, NULL, 0, NULL, '0c794501-3fa6-4bac-b7c2-2b220bfa0f0c', '1', '2022-02-22 05:15:51', '2022-02-22 05:16:09', '2022-02-22 05:16:09'),
+(3, 'sas', 2, 2, 'Certified', '212.00', '12', NULL, NULL, 0, NULL, '685a2d18-9d00-48a6-9c5c-1f72b928c0b5', '12', '2022-02-22 05:52:09', '2022-03-01 06:08:25', NULL),
+(4, 'sasasas', 3, 1, 'Certified', '24.00', 'sasas', NULL, 'uploads/course/0703515133937341645599831__Chemistry.jpg', 0, NULL, '9392da61-ffb3-4d98-b65e-145d83c97b31', 'asa', '2022-02-22 08:15:26', '2022-02-23 03:41:08', NULL),
+(5, 'Test 2', 3, 1, 'Non-certified', '100.00', 'sd', 200, 'uploads/course/07045617540142241645599896__Course4.jfif', 0, NULL, '922c8954-8565-4af7-bc91-2a9f6009b3ea', 'null', '2022-02-23 01:23:42', '2022-03-31 03:53:56', NULL);
 
 -- --------------------------------------------------------
 
@@ -390,6 +391,38 @@ CREATE TABLE `product_tag` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `qnsans`
+--
+
+CREATE TABLE `qnsans` (
+  `id` int(11) NOT NULL,
+  `uuid` char(36) NOT NULL,
+  `course_id` int(5) NOT NULL,
+  `topic_id` int(5) NOT NULL,
+  `video_id` int(6) DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  `question` text NOT NULL,
+  `ans1` text NOT NULL,
+  `ans2` text NOT NULL,
+  `ans3` text NOT NULL,
+  `ans4` text NOT NULL,
+  `rightans` text NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 0,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `qnsans`
+--
+
+INSERT INTO `qnsans` (`id`, `uuid`, `course_id`, `topic_id`, `video_id`, `user_id`, `question`, `ans1`, `ans2`, `ans3`, `ans4`, `rightans`, `status`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(1, '4d022dbd-6fef-4b1b-9c56-6d983e00481e', 1, 2, NULL, 1, 'Question 1', 'Ans 4', 'Ans 2', 'Ans 3', 'Ans 4', 'Ans 3', 0, NULL, '2022-04-02 11:57:48', '2022-04-02 12:00:28');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `roles`
 --
 
@@ -438,6 +471,33 @@ INSERT INTO `settings` (`id`, `key_name`, `val`, `created_at`, `updated_at`) VAL
 (2, 'admin_email', 'bright-horizon@mailinator.com', '2019-06-06 09:43:18', '2022-03-27 11:29:24'),
 (3, 'contact_number', '+91-9785550346', NULL, '2022-03-27 11:29:24'),
 (4, 'contact_page_address', 'orem ipsum dolor,<br>sit amet consectetur, adipisicing elit', NULL, '2022-03-27 11:29:24');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sliders`
+--
+
+CREATE TABLE `sliders` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `course_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `slider_image` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `uuid` char(36) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `sliders`
+--
+
+INSERT INTO `sliders` (`id`, `name`, `course_id`, `slider_image`, `description`, `status`, `deleted_at`, `created_at`, `updated_at`, `uuid`) VALUES
+(1, 'BrightHorizon', 1, 'uploads/slider/05384819338278261648791528__0650372840241971643871037__BFSI course images -2.jpg', 'as', 1, NULL, '2022-04-01 00:01:52', '2022-04-01 00:08:48', '55c72ccd-9e00-46d1-b6d0-98d775e46603'),
+(2, 'BrightHorizons', 4, 'uploads/slider/05361113934334921648791371__logo.png', 'asas', 1, NULL, '2022-04-01 00:06:11', '2022-04-01 00:10:25', '08e20093-8097-4090-8312-28c56bbe256c');
 
 -- --------------------------------------------------------
 
@@ -522,7 +582,7 @@ CREATE TABLE `topics` (
 INSERT INTO `topics` (`id`, `name`, `course_id`, `status`, `description`, `deleted_at`, `created_at`, `updated_at`, `uuid`) VALUES
 (1, 'Test Topic', 5, 1, 'test', NULL, '2022-03-01 07:17:44', '2022-03-02 01:30:50', '8c190418-5dfb-49df-b34e-cb2523a9b472'),
 (2, 'Test 2 Topic', 1, 0, 'test 2', NULL, '2022-03-01 07:22:08', '2022-03-01 07:27:34', 'cc4c9866-4e62-462c-9d55-aafbe8bceb54'),
-(3, 'Test tt', 4, 1, NULL, NULL, '2022-03-01 07:28:15', '2022-03-25 11:30:19', '1b8c228e-3cf4-4d46-8a2c-17de795587e2');
+(3, 'Test tt', 4, 1, NULL, NULL, '2022-03-01 07:28:15', '2022-03-31 04:36:32', '1b8c228e-3cf4-4d46-8a2c-17de795587e2');
 
 -- --------------------------------------------------------
 
@@ -554,7 +614,7 @@ INSERT INTO `users` (`id`, `name`, `type`, `email`, `contact`, `dob`, `status`, 
 (1, 'Admin', 'admin', 'admin@gmail.com', NULL, NULL, 0, '2022-02-21 18:30:00', '$2y$10$kYuD1xCz1kGkWCAWgofkSey/JXZB7HBb53HM.BQLDIXz19MadZwV6', NULL, '2c2974e6-4612-4010-800b-cb0f0d8467df', '2022-02-22 01:35:36', '2022-02-22 01:35:36'),
 (3, 'tutors1', 'user', 'tutors@gmail.com', '9694754693', '2022-03-08', 1, NULL, '$2y$10$1MSpDIO3o9Y2IygMADMcFuw9DyOK6fntUTwUCrRd11Y5wtXocR0GC', NULL, 'a4a94aef-c97c-498e-93b5-9e696f13dc1c', '2022-03-25 04:35:44', '2022-03-25 11:33:23'),
 (4, 'Student', 'student', 'student@gmail.com', NULL, NULL, 0, NULL, '$2y$10$FPZQTuo7ThbrTA9Yrlrpze2OrlR4UAWXcg3XIhN7ku7Yku1Uoim0y', NULL, 'c4d1cc0f-6901-4703-9d2c-69a6677eec03', '2022-03-25 04:58:05', '2022-03-25 04:58:05'),
-(6, 'student2', 'student', 'student2@gmail.com', '9785550346', '2022-03-26', 1, '2022-03-25 05:03:28', '$2y$10$h0ZA3lrVGuTFb/bx4KvfxORitTQtT5kvDjelIobbMymhMqDtr8Tee', NULL, '7b5def20-8455-44cb-ab56-89929a930500', '2022-03-25 05:03:28', '2022-03-25 11:29:49'),
+(6, 'student2', 'student', 'student2@gmail.com', '9785550346', '2022-03-26', 1, '2022-03-25 05:03:28', '$2y$10$h0ZA3lrVGuTFb/bx4KvfxORitTQtT5kvDjelIobbMymhMqDtr8Tee', NULL, '7b5def20-8455-44cb-ab56-89929a930500', '2022-03-25 05:03:28', '2022-04-01 01:56:33'),
 (9, 'tutors2', 'user', 'tutors2@gmail.com', '9785550345', '2022-03-16', 1, '2022-03-25 11:35:52', '$2y$10$J/78EkG0jL8SQrSbDOkVn.FwHa0pfaLktTQZxj5wu7WcxV9itrKTO', NULL, '066e7c85-242f-4e43-923d-8b5aa6e1f377', '2022-03-25 11:35:52', '2022-03-25 11:35:52');
 
 -- --------------------------------------------------------
@@ -571,11 +631,11 @@ CREATE TABLE `videos` (
   `video_url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `description` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `topic_id` bigint(20) UNSIGNED DEFAULT 0,
-  `tutor_id` bigint(20) UNSIGNED DEFAULT 0,
   `user_id` bigint(20) UNSIGNED DEFAULT NULL,
   `note_id` bigint(20) UNSIGNED DEFAULT 0,
+  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `video_note` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `total_views` bigint(20) UNSIGNED DEFAULT NULL,
-  `status` tinyint(3) DEFAULT 1,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -586,11 +646,14 @@ CREATE TABLE `videos` (
 -- Dumping data for table `videos`
 --
 
-INSERT INTO `videos` (`id`, `name`, `course_id`, `video_id`, `video_url`, `description`, `topic_id`, `tutor_id`, `user_id`, `note_id`, `total_views`, `status`, `deleted_at`, `created_at`, `updated_at`, `uuid`) VALUES
-(52, NULL, 1, '668904983', 'https://player.vimeo.com/video/669302195?h=ec3da27079', 'Css Introduction', 143, 25, 1, 2, NULL, 1, NULL, '2022-01-20 15:47:33', '2022-01-28 11:12:09', '72463de1-7572-4e7e-8082-9b780ffda664'),
-(190, NULL, 2, '668904983', 'https://player.vimeo.com/video/669302195?h=ec3da27079', 's', 1, 25, 1, 0, NULL, 1, NULL, '2022-01-28 06:52:16', '2022-01-28 14:49:04', '174734f0-6a42-4a19-a41d-64aac4f7df7d'),
-(191, NULL, 1, '669302195', 'https://player.vimeo.com/video/669302195?h=ec3da27079', 'f', 189, 121, 121, 0, NULL, 0, '2022-01-28 13:12:35', '2022-01-28 13:02:13', '2022-01-28 13:12:35', '61d61c10-0161-49ff-bc68-85322e8c98ab'),
-(192, NULL, 2, '669302195', 'https://player.vimeo.com/video/669302195?h=ec3da27079', 's', 190, 121, 121, 0, NULL, 0, '2022-01-28 13:16:15', '2022-01-28 13:16:02', '2022-01-28 13:16:15', '0e322a23-e9cd-47d9-afc3-2b4a14173f6e');
+INSERT INTO `videos` (`id`, `name`, `course_id`, `video_id`, `video_url`, `description`, `topic_id`, `user_id`, `note_id`, `status`, `video_note`, `total_views`, `deleted_at`, `created_at`, `updated_at`, `uuid`) VALUES
+(52, NULL, 1, '668904983', 'https://player.vimeo.com/video/669302195?h=ec3da27079', 'Css Introduction', 143, 1, 2, 1, NULL, NULL, '2022-04-01 01:50:02', '2022-01-20 15:47:33', '2022-04-01 01:50:02', '72463de1-7572-4e7e-8082-9b780ffda664'),
+(190, 'Test', 5, '668904983', 'https://player.vimeo.com/video/669302195?h=ec3da27079', 's', 1, 1, 0, 1, '', NULL, NULL, '2022-01-28 06:52:16', '2022-03-31 06:53:44', '174734f0-6a42-4a19-a41d-64aac4f7df7d'),
+(191, NULL, 1, '669302195', 'https://player.vimeo.com/video/669302195?h=ec3da27079', 'f', 189, 121, 0, 1, NULL, NULL, '2022-01-28 13:12:35', '2022-01-28 13:02:13', '2022-01-28 13:12:35', '61d61c10-0161-49ff-bc68-85322e8c98ab'),
+(192, NULL, 2, '669302195', 'https://player.vimeo.com/video/669302195?h=ec3da27079', 's', 190, 121, 0, 1, NULL, NULL, '2022-01-28 13:16:15', '2022-01-28 13:16:02', '2022-01-28 13:16:15', '0e322a23-e9cd-47d9-afc3-2b4a14173f6e'),
+(193, 'dds', 1, NULL, 'https://vimeo.com/669302195', 'https://vimeo.com/669302195', 2, 1, 0, 1, 'uploads/video_note/0727338067906501648798053__0650372840241971643871037__BFSI course images -2.jpg', NULL, NULL, '2022-04-01 01:57:33', '2022-04-01 01:57:33', '6035dcd0-ce10-4545-9f48-d63fbcc5d09b'),
+(194, 'dds', 1, NULL, 'https://vimeo.com/669302195', 'https://vimeo.com/669302195', 2, 1, 0, 1, 'uploads/video_note/0727564736969931648798076__0650372840241971643871037__BFSI course images -2.jpg', NULL, NULL, '2022-04-01 01:57:56', '2022-04-01 01:57:56', 'f19331fa-8435-4fcd-849c-85cbdb90350e'),
+(195, 'ds', 1, NULL, 'https://vimeo.com/manage/videos/668895604', 'https://vimeo.com/manage/videos/668895604', 2, 1, 0, 1, 'uploads/video_note/0842244668031001648802544__NEAT AICTE (2).pdf', NULL, NULL, '2022-04-01 02:00:07', '2022-04-01 03:12:24', '10c56662-a6a5-4472-85ef-1b9e2cf01f61');
 
 --
 -- Indexes for dumped tables
@@ -686,6 +749,12 @@ ALTER TABLE `products`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `qnsans`
+--
+ALTER TABLE `qnsans`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `roles`
 --
 ALTER TABLE `roles`
@@ -703,6 +772,12 @@ ALTER TABLE `role_user`
 ALTER TABLE `settings`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `settings_key_name_unique` (`key_name`);
+
+--
+-- Indexes for table `sliders`
+--
+ALTER TABLE `sliders`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `sub_category`
@@ -802,6 +877,12 @@ ALTER TABLE `products`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
+-- AUTO_INCREMENT for table `qnsans`
+--
+ALTER TABLE `qnsans`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
@@ -818,6 +899,12 @@ ALTER TABLE `role_user`
 --
 ALTER TABLE `settings`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `sliders`
+--
+ALTER TABLE `sliders`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `sub_category`
@@ -847,7 +934,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `videos`
 --
 ALTER TABLE `videos`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=193;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=196;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

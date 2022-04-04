@@ -43,6 +43,7 @@ Route::namespace('App\\Http\\Controllers\\API\V1')->group(function () {
 	Route::get('sub-category/list', 'SubCategoryController@list');
     Route::post('product/upload', 'ProductController@upload');
 	Route::post('videos/update', 'VideoController@update');
+    Route::post('sliders/update', 'SliderController@update');
     Route::post('course/update', 'CourseController@update');
     Route::get('students', 'UserController@students');
     Route::get('tutors', 'UserController@tutors');
@@ -50,14 +51,16 @@ Route::namespace('App\\Http\\Controllers\\API\V1')->group(function () {
     Route::post('settings', 'SettingController@store');
 
     Route::apiResources([
-        'user' => 'UserController',
+        '/user' => 'UserController',
         'product' => 'ProductController',
         'category' => 'CategoryController',
-		'subcategory' => 'SubCategoryController',
+		'questions' => 'QnsAnsController',
+        'subcategory' => 'SubCategoryController',
 		'course' => 'CourseController',
 		'topic' => 'TopicController',
         'page' => 'PageController',
         'videos' => 'VideoController',
+        'sliders' => 'SliderController',
         'coupons' => 'CouponController',
     ]);
 });

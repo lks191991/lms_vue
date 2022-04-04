@@ -44,7 +44,7 @@ class UserController extends BaseController
      */
     public function students()
     {
-       
+      
         if (!Gate::allows('isAdmin')) {
             return $this->unauthorizedResponse();
         }

@@ -65,7 +65,35 @@ class VideoController extends BaseController
 			$video = new Video();
 		
 		
-			
+            if ($request->hasFile('video_note')) {
+
+                $validator = Validator::make($request->all(), [
+                            'video_note' => 'mimes:pdf|max:2048',
+                                ], [
+                            'video_note.max' => 'The banner image may not be greater than 2 mb.',
+                ]);
+                if ($validator->fails()) {
+                        return response()->json([
+                        'success' => false,
+                        'message' => 'The banner image must be an image.',
+                        'errors' => $validator->errors()
+                        ], 422);
+                }
+    
+                $destinationPath = public_path('/uploads/video_note/');
+                $newName = '';
+                $fileName = $request->all()['video_note']->getClientOriginalName();
+                $file = request()->file('video_note');
+                $fileNameArr = explode('.', $fileName);
+                $fileNameExt = end($fileNameArr);
+                $newName = date('His') . rand() . time() . '__' . $fileNameArr[0] . '.' . $fileNameExt;
+    
+                $file->move($destinationPath, $newName);
+                
+                $imagePath = 'uploads/video_note/' . $newName;
+                $video->video_note = $imagePath;
+            }
+
 			$video->name  =  $request->get('name');
 			$video->course_id =  $request->get('course_id');
 			$video->video_url =  $request->get('video_url');
@@ -77,7 +105,7 @@ class VideoController extends BaseController
 		
         
 
-        return $this->sendResponse($course, 'Video Created Successfully');
+        return $this->sendResponse($video, 'Video Created Successfully');
     }
 
     /**
@@ -98,7 +126,7 @@ class VideoController extends BaseController
         if ($request->hasFile('video_note')) {
 
 			$validator = Validator::make($request->all(), [
-                        'video_note' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+                        'video_note' => 'mimes:pdf|max:2048',
                             ], [
                         'video_note.max' => 'The banner image may not be greater than 2 mb.',
             ]);
