@@ -1,6 +1,8 @@
 export default [
      // frontend routes start**************************************************************
-
+     { path: '/', component: require('./components/front/Home.vue').default },
+     { path: '/login', component: require('./components/front/Login.vue').default },
+     { path: '/profile', component: require('./components/front/Profile.vue').default },
       // frontend routes end **************************************************************
 
     // admin routes**************************************************************
