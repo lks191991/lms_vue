@@ -25,6 +25,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::namespace('App\\Http\\Controllers\\API\V1\Front')->group(function () {
+	Route::post('login', 'RegisterController@login');
+	Route::post('register', 'RegisterController@register');
+	
+	Route::middleware(['auth:api'])->group(function () {
+		Route::post('change_password', 'RegisterController@changepassword');
+		Route::post('profile', 'ProfileController@profile');
+	});
+});
 
 Route::namespace('App\\Http\\Controllers\\API\V1')->group(function () {
 	
