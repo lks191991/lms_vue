@@ -40,9 +40,20 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::namespace('App\\Http\\Controllers\\API\V1\Front')->group(function () {
 	Route::post('login', 'RegisterController@login');
 	Route::post('register', 'RegisterController@register');
+	Route::post('forgotpassword', 'RegisterController@forgotpassword');
+	Route::get('page/{id}', 'PageController@index');
+	Route::get('setting', 'PageController@setting');
+	Route::get('nav-course-menu', 'PageController@courseMenu');
+	Route::get('home-slider', 'PageController@homeSlider');
+	Route::get('home-page-course', 'PageController@homePageCourse');
+	Route::post('all-courses', 'PageController@allCourses');
+	Route::post('course-by-subcategory', 'PageController@courseByCategory');
+	Route::post('course-details', 'PageController@courseDetails');
 	
 	Route::middleware(['auth:api'])->group(function () {
-		Route::post('change_password', 'RegisterController@changepassword');
+		Route::post('change_password', 'ProfileController@changepassword');
+		Route::post('change-profile', 'ProfileController@editProfile');
+		Route::post('change-profile-image', 'ProfileController@editProfileImage');
 		Route::post('profile', 'ProfileController@profile');
 	});
 });
