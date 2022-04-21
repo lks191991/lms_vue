@@ -15,6 +15,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::namespace('App\\Http\\Controllers\\API\F1')->group(function () {
+
+    Route::post('login', 'AuthController@login');
+    Route::post('signup', 'AuthController@signup');
+    Route::post('logout', 'AuthController@logout');
+    Route::post('refresh', 'AuthController@refresh');
+    Route::post('me', 'AuthController@me');
+    Route::post('sendPasswordResetLink', 'ResetPasswordController@sendEmail');
+    Route::post('resetPassword', 'ChangePasswordController@process');
+    Route::get('get-course-list-menu', 'CommonController@courseListMenu');
+});
+
 Route::get('version', function () {
     return response()->json(['version' => config('app.version')]);
 });
