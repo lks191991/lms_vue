@@ -4,14 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Http\Request;
-use Validator;
-use DB;
-use Illuminate\Support\Facades\Mail;
-use Auth;
-use App\Models\User;
-use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
@@ -33,8 +25,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    //protected $redirectTo = '';
-   protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = '/dashboard';
 
     /**
      * Create a new controller instance.
@@ -45,20 +36,4 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
-
-    /* public function redirectTo() {
-        $role = Auth::user()->type; 
-        switch ($role) {
-          case 'admin':
-            return '/admin/dashboard';
-            break;
-          case 'user':
-            return '/admin/dashboard';
-            break; 
-      
-          default:
-            return '/'; 
-          break;
-        }
-      } */
 }

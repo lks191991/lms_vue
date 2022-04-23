@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +11,6 @@
   
 
   <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper" id="app">
@@ -44,16 +42,16 @@
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <router-link to="/admin/dashboard" class="brand-link">
-      <img src="{{ asset('/images/logo-admin.png') }}" alt="The Logo" class="brand-image img-circle elevation-3"
-           style="background: #fff">
+    <router-link to="/dashboard" class="brand-link">
+      <img src="{{ asset('/images/logo.png') }}" alt="The Logo" class="brand-image img-circle elevation-3"
+           style="opacity: .8">
       <span class="brand-text font-weight-light">{{ config('app.name', 'Laravel') }}</span>
     </router-link>
 
     <!-- Sidebar -->
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
-        <router-link to="/admin/profile">
+        <router-link to="/profile">
           <div class="user-panel mt-3 pb-3 mb-3 d-flex">
               <div class="image">
                 <img src="{{ auth()->user()->photo }}" class="img-circle elevation-2" alt="User Image">
@@ -110,9 +108,10 @@
   <footer class="main-footer">
     {{-- To the right --}}
     <div class="float-right d-none d-sm-block">
+      <b>Version</b> 3.0.0
     </div>
     {{-- Default to the left --}}
-    <strong>Copyright &copy; {{date('Y')}} {{ config('app.name', 'Laravel') }} All rights reserved.
+    <strong>Copyright &copy; 2014-2019 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
   </footer>
 </div>
 {{-- ./wrapper --}}
