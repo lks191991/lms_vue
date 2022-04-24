@@ -72,7 +72,7 @@ class RegisterController extends BaseController
 		$success['contact'] =  $user->contact;
         $success['email'] =  $user->email;
         
-        Mail::to($input['email'],'Registration Email')->send(new sendAPIRegisterToTechnicianMailable($input));  
+        //Mail::to($input['email'],'Registration Email')->send(new sendAPIRegisterToTechnicianMailable($input));  
    
         return $this->sendResponse($success, 'User has been registered successfully.');
     }
