@@ -73,8 +73,8 @@ class RegisterController extends BaseController
         $success['status'] =  1;
 		$success['contact'] =  $user->contact;
         $success['email'] =  $user->email;
-        $oClient = OClient::where('password_client', 1)->first();
-        $success['TokenAndRefreshToken'] = $this->getTokenAndRefreshToken($oClient, request('email'), request('password'));
+        //$oClient = OClient::where('password_client', 1)->first();
+        //$success['TokenAndRefreshToken'] = $this->getTokenAndRefreshToken($oClient, request('email'), request('password'));
    
         //Mail::to($input['email'],'Registration Email')->send(new sendAPIRegisterToTechnicianMailable($input));  
    
@@ -117,11 +117,11 @@ class RegisterController extends BaseController
 
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
             $user = Auth::user(); 
-            $oClient = OClient::where('password_client', 1)->first();
+           // $oClient = OClient::where('password_client', 1)->first();
             $success['token'] =  $user->createToken('MyApp')->accessToken; 
             $success['name'] =  $user->name;
             $success['email'] =  $user->email;
-            $success['TokenAndRefreshToken'] = $this->getTokenAndRefreshToken($oClient, request('email'), request('password'));
+           // $success['TokenAndRefreshToken'] = $this->getTokenAndRefreshToken($oClient, request('email'), request('password'));
    
             return $this->sendResponse($success, 'User login successfully.');
         }elseif(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
