@@ -33,12 +33,16 @@ Route::namespace('App\\Http\\Controllers\\API\V1\Front')->group(function () {
 	Route::get('page/{id}', 'PageController@index');
 	Route::get('setting', 'PageController@setting');
 	Route::get('nav-course-menu', 'PageController@courseMenu');
+    Route::get('home-category', 'PageController@homePageCategory');
 	Route::get('home-slider', 'PageController@homeSlider');
 	Route::get('home-page-course', 'PageController@homePageCourse');
 	Route::post('all-courses', 'PageController@allCourses');
 	Route::post('course-by-subcategory', 'PageController@courseByCategory');
 	Route::post('course-details', 'PageController@courseDetails');
-	
+    Route::post('contact-us', 'PageController@sendContact');
+    Route::post('save-newsletter', 'PageController@saveNewsletter');
+    Route::post('course-view-update', 'PageController@courseViewUpdate');
+
 	Route::middleware(['auth:api'])->group(function () {
 		Route::post('change_password', 'ProfileController@changepassword');
 		Route::post('change-profile', 'ProfileController@editProfile');
