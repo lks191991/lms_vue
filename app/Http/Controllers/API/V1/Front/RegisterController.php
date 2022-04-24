@@ -15,7 +15,9 @@ use Validator;
 use Hash;
 use DB;
 use Image;
-   
+use GuzzleHttp\Client;
+use Laravel\Passport\Client as OClient;
+
 class RegisterController extends BaseController
 {
     
@@ -71,7 +73,9 @@ class RegisterController extends BaseController
         $success['status'] =  1;
 		$success['contact'] =  $user->contact;
         $success['email'] =  $user->email;
-        
+        $oClient = OClient::where('password_client', 1)->first();
+        $success['TokenAndRefreshToken'] = $this->getTokenAndRefreshToken($oClient, request('email'), request('password'));
+   
         //Mail::to($input['email'],'Registration Email')->send(new sendAPIRegisterToTechnicianMailable($input));  
    
         return $this->sendResponse($success, 'User has been registered successfully.');
@@ -82,6 +86,8 @@ class RegisterController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
+
+
     public function login(Request $request)
     {
 
@@ -111,9 +117,11 @@ class RegisterController extends BaseController
 
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
             $user = Auth::user(); 
+            $oClient = OClient::where('password_client', 1)->first();
             $success['token'] =  $user->createToken('MyApp')->accessToken; 
             $success['name'] =  $user->name;
             $success['email'] =  $user->email;
+            $success['TokenAndRefreshToken'] = $this->getTokenAndRefreshToken($oClient, request('email'), request('password'));
    
             return $this->sendResponse($success, 'User login successfully.');
         }elseif(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
@@ -168,7 +176,22 @@ class RegisterController extends BaseController
     }
 
     
-	
+    public function getTokenAndRefreshToken(OClient $oClient, $email, $password) { 
+        $oClient = OClient::where('password_client', 1)->first();
+        $http = new Client;
+        $response = $http->request('POST', 'http://mylemp-nginx/oauth/token', [
+            'form_params' => [
+                'grant_type' => 'password',
+                'client_id' => $oClient->id,
+                'client_secret' => $oClient->secret,
+                'username' => $email,
+                'password' => $password,
+                'scope' => '*',
+            ],
+        ]);
+        $result = json_decode((string) $response->getBody(), true);
+        return response()->json($result, $this->successStatus);
+    }
 	
 
 }
