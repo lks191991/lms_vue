@@ -140,7 +140,7 @@ class ProfileController extends BaseController
         $userid = Auth::guard('api')->user()->id;
         $validator = Validator::make($input, [
             'oldPassword' => 'required',
-            'password' => 'required|min:8|regex:/^(?=.*\d)(?=.*[A-Z])[\w\W]{8,}$/',
+            'password' => 'required|min:8',
             'confirmPassword' => 'required|same:password',
         ],
         [
