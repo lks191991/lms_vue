@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 20, 2022 at 04:26 AM
+-- Generation Time: Apr 24, 2022 at 07:00 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -46,6 +46,31 @@ INSERT INTO `categories` (`id`, `name`, `description`, `created_at`, `updated_at
 (4, 'Minivan', '50', NULL, NULL),
 (5, 'Sports & Specialty', '50', NULL, NULL),
 (6, 'Sedan', '50', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contact_inquiries`
+--
+
+CREATE TABLE `contact_inquiries` (
+  `id` int(11) NOT NULL,
+  `your_name` varchar(200) DEFAULT NULL,
+  `mobile_number` varchar(20) DEFAULT NULL,
+  `email` varchar(200) DEFAULT NULL,
+  `message` text DEFAULT NULL,
+  `sending_as` varchar(100) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `uuid` char(36) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `contact_inquiries`
+--
+
+INSERT INTO `contact_inquiries` (`id`, `your_name`, `mobile_number`, `email`, `message`, `sending_as`, `created_at`, `updated_at`, `uuid`) VALUES
+(1, 'Lokesh', '978550346', 'lokesh@gmail.com', 'Hello', NULL, '2022-04-24 11:04:52', '2022-04-24 11:04:52', 'e90b1269-fb73-4ba5-b19d-3bb0b5c9958a');
 
 -- --------------------------------------------------------
 
@@ -95,6 +120,7 @@ CREATE TABLE `courses` (
   `price` decimal(10,2) NOT NULL,
   `demo_url` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `total_length_minutes` int(11) DEFAULT NULL,
+  `total_view` int(11) NOT NULL,
   `banner_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
   `user_id` char(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -109,12 +135,12 @@ CREATE TABLE `courses` (
 -- Dumping data for table `courses`
 --
 
-INSERT INTO `courses` (`id`, `name`, `category_id`, `sub_category_id`, `course_type`, `price`, `demo_url`, `total_length_minutes`, `banner_image`, `status`, `user_id`, `uuid`, `description`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'test', 1, 1, 'Non-certified', '21.00', 'test', NULL, NULL, 0, NULL, 'f785d9c6-7d9f-4811-a610-fd5ae14a1bb1', NULL, '2022-02-22 04:06:20', '2022-03-01 03:42:45', NULL),
-(2, 'sas', 3, 1, 'Certified', '212.00', '12', NULL, NULL, 0, NULL, '0c794501-3fa6-4bac-b7c2-2b220bfa0f0c', '1', '2022-02-22 05:15:51', '2022-02-22 05:16:09', '2022-02-22 05:16:09'),
-(3, 'sas', 2, 2, 'Certified', '212.00', '12', NULL, NULL, 0, NULL, '685a2d18-9d00-48a6-9c5c-1f72b928c0b5', '12', '2022-02-22 05:52:09', '2022-03-01 06:08:25', NULL),
-(4, 'sasasas', 3, 1, 'Certified', '24.00', 'sasas', NULL, 'uploads/course/0703515133937341645599831__Chemistry.jpg', 0, NULL, '9392da61-ffb3-4d98-b65e-145d83c97b31', 'asa', '2022-02-22 08:15:26', '2022-02-23 03:41:08', NULL),
-(5, 'Test 2', 3, 1, 'Non-certified', '100.00', 'sd', 200, 'uploads/course/07045617540142241645599896__Course4.jfif', 0, NULL, '922c8954-8565-4af7-bc91-2a9f6009b3ea', 'null', '2022-02-23 01:23:42', '2022-03-31 03:53:56', NULL);
+INSERT INTO `courses` (`id`, `name`, `category_id`, `sub_category_id`, `course_type`, `price`, `demo_url`, `total_length_minutes`, `total_view`, `banner_image`, `status`, `user_id`, `uuid`, `description`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'test', 1, 1, 'Non-certified', '21.00', 'test', NULL, 2, NULL, 0, NULL, 'f785d9c6-7d9f-4811-a610-fd5ae14a1bb1', NULL, '2022-02-22 04:06:20', '2022-04-24 11:26:25', NULL),
+(2, 'sas', 3, 1, 'Certified', '212.00', '12', NULL, 0, NULL, 0, NULL, '0c794501-3fa6-4bac-b7c2-2b220bfa0f0c', '1', '2022-02-22 05:15:51', '2022-02-22 05:16:09', '2022-02-22 05:16:09'),
+(3, 'sas', 2, 2, 'Certified', '212.00', '12', NULL, 0, NULL, 0, NULL, '685a2d18-9d00-48a6-9c5c-1f72b928c0b5', '12', '2022-02-22 05:52:09', '2022-03-01 06:08:25', NULL),
+(4, 'sasasas', 3, 1, 'Certified', '24.00', 'sasas', NULL, 0, 'uploads/course/0703515133937341645599831__Chemistry.jpg', 0, NULL, '9392da61-ffb3-4d98-b65e-145d83c97b31', 'asa', '2022-02-22 08:15:26', '2022-02-23 03:41:08', NULL),
+(5, 'Test 2', 3, 1, 'Non-certified', '100.00', 'sd', 200, 0, 'uploads/course/07045617540142241645599896__Course4.jfif', 0, NULL, '922c8954-8565-4af7-bc91-2a9f6009b3ea', 'null', '2022-02-23 01:23:42', '2022-03-31 03:53:56', NULL);
 
 -- --------------------------------------------------------
 
@@ -166,6 +192,27 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (15, '2020_01_08_113508_create_product_tag_pivot_table', 1),
 (16, '2022_02_21_063405_create_sub_category_table', 2),
 (17, '2022_02_22_062012_create_courses_table', 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `newsletters`
+--
+
+CREATE TABLE `newsletters` (
+  `id` int(11) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `newsletters`
+--
+
+INSERT INTO `newsletters` (`id`, `email`, `created_at`, `updated_at`) VALUES
+(1, 'masteradmin@mailinator.com', '2021-12-25 07:53:29', '2021-12-25 07:53:29'),
+(4, 'lokesh@gmail.com', '2022-04-24 11:07:24', '2022-04-24 11:07:24');
 
 -- --------------------------------------------------------
 
@@ -470,7 +517,12 @@ INSERT INTO `settings` (`id`, `key_name`, `val`, `created_at`, `updated_at`) VAL
 (1, 'contact_email', 'sharmalk1991@gmail.com', '2019-05-21 15:29:21', '2022-03-27 11:29:24'),
 (2, 'admin_email', 'bright-horizon@mailinator.com', '2019-06-06 09:43:18', '2022-03-27 11:29:24'),
 (3, 'contact_number', '+91-9785550346', NULL, '2022-03-27 11:29:24'),
-(4, 'contact_page_address', 'orem ipsum dolor,<br>sit amet consectetur, adipisicing elit', NULL, '2022-03-27 11:29:24');
+(4, 'contact_page_address', 'orem ipsum dolor,<br>sit amet consectetur, adipisicing elit', NULL, '2022-03-27 11:29:24'),
+(5, 'facebook_link', '#', NULL, NULL),
+(6, 'twitter_link', '#', NULL, NULL),
+(7, 'instagram_link', '#', NULL, NULL),
+(8, 'linkedin_link', '#', NULL, NULL),
+(9, 'youtube_link', '#', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -611,7 +663,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `type`, `email`, `contact`, `dob`, `status`, `email_verified_at`, `password`, `remember_token`, `uuid`, `created_at`, `updated_at`) VALUES
-(1, 'Admin', 'admin', 'admin@gmail.com', NULL, NULL, 0, '2022-02-21 18:30:00', '$2y$10$kYuD1xCz1kGkWCAWgofkSey/JXZB7HBb53HM.BQLDIXz19MadZwV6', NULL, '2c2974e6-4612-4010-800b-cb0f0d8467df', '2022-02-22 01:35:36', '2022-02-22 01:35:36'),
+(1, 'Admin', 'admin', 'admin@gmail.com', NULL, NULL, 0, '2022-02-21 18:30:00', '$2y$10$kYuD1xCz1kGkWCAWgofkSey/JXZB7HBb53HM.BQLDIXz19MadZwV6', 'lQcwxwWjCTQFeKZ4xcWYO03pkUvwQH57fYluDpI8xQst6CRZV5cZc5ijIEUH', '2c2974e6-4612-4010-800b-cb0f0d8467df', '2022-02-22 01:35:36', '2022-02-22 01:35:36'),
 (3, 'tutors1', 'user', 'tutors@gmail.com', '9694754693', '2022-03-08', 1, NULL, '$2y$10$1MSpDIO3o9Y2IygMADMcFuw9DyOK6fntUTwUCrRd11Y5wtXocR0GC', NULL, 'a4a94aef-c97c-498e-93b5-9e696f13dc1c', '2022-03-25 04:35:44', '2022-03-25 11:33:23'),
 (4, 'Student', 'student', 'student@gmail.com', NULL, NULL, 0, NULL, '$2y$10$FPZQTuo7ThbrTA9Yrlrpze2OrlR4UAWXcg3XIhN7ku7Yku1Uoim0y', NULL, 'c4d1cc0f-6901-4703-9d2c-69a6677eec03', '2022-03-25 04:58:05', '2022-03-25 04:58:05'),
 (6, 'student2', 'student', 'student2@gmail.com', '9785550346', '2022-03-26', 1, '2022-03-25 05:03:28', '$2y$10$h0ZA3lrVGuTFb/bx4KvfxORitTQtT5kvDjelIobbMymhMqDtr8Tee', NULL, '7b5def20-8455-44cb-ab56-89929a930500', '2022-03-25 05:03:28', '2022-04-01 01:56:33'),
@@ -666,6 +718,12 @@ ALTER TABLE `categories`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `contact_inquiries`
+--
+ALTER TABLE `contact_inquiries`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `coupons`
 --
 ALTER TABLE `coupons`
@@ -688,6 +746,12 @@ ALTER TABLE `failed_jobs`
 -- Indexes for table `migrations`
 --
 ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `newsletters`
+--
+ALTER TABLE `newsletters`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -823,6 +887,12 @@ ALTER TABLE `categories`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
+-- AUTO_INCREMENT for table `contact_inquiries`
+--
+ALTER TABLE `contact_inquiries`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `coupons`
 --
 ALTER TABLE `coupons`
@@ -845,6 +915,12 @@ ALTER TABLE `failed_jobs`
 --
 ALTER TABLE `migrations`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `newsletters`
+--
+ALTER TABLE `newsletters`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `notes`
@@ -898,7 +974,7 @@ ALTER TABLE `role_user`
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `sliders`
