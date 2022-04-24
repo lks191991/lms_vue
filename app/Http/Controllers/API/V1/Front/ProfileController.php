@@ -7,7 +7,8 @@ use App\Http\Controllers\API\V1\Front\BaseController as BaseController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Validator;
-   
+use Hash;
+
 class ProfileController extends BaseController
 {
     
