@@ -81,7 +81,7 @@ class ProfileController extends BaseController
         if($validator->fails()){
            $errors = $validator->errors();
            $errorMsg = '';
-           elseif($errors->first('image'))
+           if($errors->first('image'))
                $errorMsg = $errors->first('image');   
          
            return $this->sendError($errorMsg); 
@@ -139,7 +139,7 @@ class ProfileController extends BaseController
         $input = $request->all();
         $userid = Auth::guard('api')->user()->id;
         $validator = Validator::make($input, [
-            'OldPassword' => 'required',
+            'oldPassword' => 'required',
             'password' => 'required|min:8|regex:/^(?=.*\d)(?=.*[A-Z])[\w\W]{8,}$/',
             'confirmPassword' => 'required|same:password',
         ],
@@ -152,8 +152,8 @@ class ProfileController extends BaseController
             //$arr = array("status" => 400, "message" => $validator->errors()->first(), "data" => array());
             $errors = $validator->errors();
             $errorMsg = '';
-            if($errors->first('OldPassword'))
-                $errorMsg = $errors->first('OldPassword'); 
+            if($errors->first('oldPassword'))
+                $errorMsg = $errors->first('oldPassword'); 
             elseif($errors->first('password'))
                 $errorMsg = $errors->first('password');  
             elseif($errors->first('confirmPassword'))
@@ -162,7 +162,7 @@ class ProfileController extends BaseController
             return $this->sendError($errorMsg);   
         } else {
             try {
-                if ((Hash::check(request('OldPassword'), Auth::user()->password)) == false) {
+                if ((Hash::check(request('oldPassword'), Auth::user()->password)) == false) {
                     return $this->sendError("The old password is incorrect.");  
                 } else if ((Hash::check(request('password'), Auth::user()->password)) == true) {
                     return $this->sendError("Please enter a password which is not similar then current password.");  
