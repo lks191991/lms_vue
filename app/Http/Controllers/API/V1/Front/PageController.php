@@ -106,7 +106,7 @@ class PageController extends BaseController
 	public function allCourses()
     {
         
-			$courses = Course::get();
+			$courses = Course::withCount('total_lesson')->get();
 			return $this->sendResponse($courses, 'courses all');
 
     }
@@ -122,7 +122,7 @@ class PageController extends BaseController
 		}
 		else
 		{
-			$page = Course::where(['id' => $data['sub_category_id']])->get(); 
+			$page = Course::where(['id' => $data['sub_category_id']])->withCount('total_lesson')->get(); 
 			return $this->sendResponse($page, 'Course by sub category');
 		}
 
@@ -137,7 +137,7 @@ class PageController extends BaseController
 		}
 		else
 		{
-			$page = Course::where(['id' => $data['course_id']])->first(); 
+			$page = Course::where(['id' => $data['course_id']])->withCount('total_lesson')->first(); 
 			return $this->sendResponse($page, 'Course Details');
 		}
        
