@@ -27,5 +27,29 @@ class Course extends Model
     {
         return $this->belongsTo(SubCategory::class,'sub_category_id');
     }
+
+    /*
+     * Get all related videos.
+     */
+    public function videos()
+    {
+        $query = $this->hasMany(Video::class, 'course_id');
+
+        return $query;
+    }
+
+    public function topics()
+    {
+        $query = $this->hasMany(Topic::class, 'course_id');
+
+        return $query;
+    }
+
+    public function total_lesson()
+    {
+        $query = $this->hasMany(Topic::class, 'course_id');
+
+        return $query;
+    }
     
 }

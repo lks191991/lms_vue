@@ -98,7 +98,7 @@ class PageController extends BaseController
 	public function homePageCourse()
     {
         
-			$courses = Course::take(3)->get();
+			$courses = Course::take(3)->withCount('total_lesson')->get();
 			return $this->sendResponse($courses, 'courses Home');
 
     }
