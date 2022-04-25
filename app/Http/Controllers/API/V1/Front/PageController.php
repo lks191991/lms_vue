@@ -70,10 +70,8 @@ class PageController extends BaseController
 	public function homePageCategory()
     {
         
-			$homePageCategory = SubCategory::select('id', 'name')
-			->get();
+		$homePageCategory = SubCategory::select('id', 'name')->withCount('courses')->get();
 			return $this->sendResponse($homePageCategory, 'Home Page Category');
-       
 
     }
 
