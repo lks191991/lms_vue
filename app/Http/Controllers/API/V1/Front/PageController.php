@@ -103,13 +103,22 @@ class PageController extends BaseController
 
     }
 	
-	public function allCourses()
+	public function allCourses(Request $request)
     {
-        
-			$courses = Course::withCount('total_lesson')->get();
+			$data = $request->all();
+			if(!empty($data['search']))
+			{
+				$courses = Course::where("name", 'like', '%'.$data['search'].'%')->withCount('total_lesson')->paginate(9);
+			}
+			else
+			{
+				$courses = Course::withCount('total_lesson')->paginate(9);
+			}
+			
 			return $this->sendResponse($courses, 'courses all');
 
     }
+
 	
 	public function courseByCategory(Request $request)
     {
