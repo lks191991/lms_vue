@@ -110,6 +110,10 @@ class PageController extends BaseController
 			{
 				$courses = Course::where("name", 'like', '%'.$data['search'].'%')->withCount('total_lesson')->paginate(9);
 			}
+			elseif(!empty($data['sub_category_id']))
+			{
+				$courses = Course::where("id",  $data['sub_category_id'])->withCount('total_lesson')->paginate(9);
+			}
 			else
 			{
 				$courses = Course::withCount('total_lesson')->paginate(9);
