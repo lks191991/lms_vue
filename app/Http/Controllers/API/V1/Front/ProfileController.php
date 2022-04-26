@@ -51,14 +51,11 @@ class ProfileController extends BaseController
 
         $input = $request->all();
         
-
-        $input['image'] = $newName;
-        $input['password'] = bcrypt($input['password']);
-        $input['type'] = 'student';
-        $input['contact'] = $input['contact'];
-        //pr($input); die;
-        $user = User::create($input);
-        $success['token'] =  $user->createToken('MyApp')->accessToken;
+        $userid = Auth::guard('api')->user()->id;
+        $user = User::find($userid);
+        $user->name = $input['name'];
+        $user->contact = $input['contact'];
+        $user->save();
         $success['name'] =  $user->name;
 		$success['contact'] =  $user->contact;
         $success['image'] =  url('/uploads/users/'.$user->image);
