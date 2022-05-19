@@ -5,9 +5,16 @@ namespace App\Http\Controllers\API\V1\Front;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\V1\Front\BaseController as BaseController;
 use App\Models\User;
+use App\Models\UserSubscription;
+use App\Models\Course;
+use App\Models\Video;
+use App\Models\StudentFlag;
+use App\Models\StudentFavourites;
+use App\Models\Rating;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use Hash;
+use Image;
 
 class ProfileController extends BaseController
 {
@@ -21,10 +28,11 @@ class ProfileController extends BaseController
     public function profile()
     {
        $data = auth('api')->user();
-       return $this->sendResponse($data, 'Profile retrieved successfully.');
+	   $user = User::find($data->id);
+       return $this->sendResponse($user, 'Profile retrieved successfully.');
     }
 	
-	 public function editProfile(Request $request)
+	public function editProfile(Request $request)
     {
         $options['allow_img_size'] = 10;
         $validator = Validator::make($request->all(), [
@@ -182,6 +190,163 @@ class ProfileController extends BaseController
         }
        
     }
+	
+	public function myCourses(Request $request)
+    {
+		$data = $request->all();
+		$user = Auth::user();
+		$userSubscription = UserSubscription::with('course')->where("user_id",Auth::guard('api')->user()->id)->where("status",'Success')->paginate(10);
 
+		return $this->sendResponse($userSubscription, 'my Courses list.');
+
+	}
+	
+	public function myCourseDetails(Request $request)
+    {
+        $data = $request->all();
+		$userSubscription = UserSubscription::where("user_id",Auth::guard('api')->user()->id)->where("course_id",$data['course_id'])->count();
+			if($userSubscription == 0)
+			{
+				$errorMsg = "Something went wrong please try again.";       
+				return $this->sendError($errorMsg); 
+			}
+			
+		if($data['course_id']=='')
+		{
+			$errorMsg = "Page not found";       
+           return $this->sendError($errorMsg); 
+		}
+		else
+		{	
+			
+			$course = Course::where(['id' => $data['course_id']])->withCount(['total_lesson','courseRating'])->withAvg('courseRating', 'rating')->with(['tutor','topics','topics.videos'])->first(); 
+			$returnData['course'] = $course;
+			
+			$review = Rating::where(['course_video_id' => $data['course_id']])->with(['user'])->paginate(10);
+			$returnData['review'] = $review;
+			$returnData['enrolled'] = 500;
+			return $this->sendResponse($returnData, 'Course Details');
+		}
+       
+
+    }
+	
+	
+	public function ratingInsert(Request $request)
+    {
+        	$input = $request->all();
+			$rating = Rating::where("course_video_id",$input["course_video_id"])->where("user_id",Auth::guard('api')->user()->id)->count();
+			
+			if($rating==0)
+			{
+			$rating = new Rating();
+			$rating->user_id = Auth::guard('api')->user()->id;
+			$rating->course_video_id = $input["course_video_id"];
+			$rating->type = $input["type"];
+			$rating->rating = $input["rating"];
+			$rating->comment = $input["comment"];
+			$rating->status = 1;
+			$rating->save();
+			return $this->sendResponse($homePageCategory->total_views, 'Thank you');
+			}
+			else
+			{
+			$errorMsg = "Already given";       
+			return $this->sendError($errorMsg);
+			}
+       
+
+    }
+	
+	
+	
+	public function flagVideo(Request $request)
+    {
+        	$input = $request->all();
+			$flag = StudentFlag::where("video_id",$input["video_id"])->where("user_id",Auth::guard('api')->user()->id)->count();
+			if($flag==0)
+			{
+			$flags = new StudentFlag();
+			$flags->user_id = Auth::guard('api')->user()->id;
+			$flags->video_id = $input["video_id"];
+			$flags->comment = $input["comment"];
+			$flags->save();
+			return $this->sendResponse($flags, 'Video Flag successfully.');
+			}
+			else
+			{
+			$errorMsg = "Already given";       
+			return $this->sendError($errorMsg);
+			}
+       
+    }
+	
+	public function favoriteVideo(Request $request)
+    {
+        	$input = $request->all();
+			$favourite = StudentFavourites::where("video_id",$input["video_id"])->where("user_id",Auth::guard('api')->user()->id)->count();
+			if($favourite==0)
+			{
+			$favourites = new StudentFavourites();
+			$favourites->user_id = Auth::guard('api')->user()->id;
+			$favourites->course_id = $input["course_id"];
+			$favourites->video_id = $input["video_id"];
+			$favourites->save();
+			return $this->sendResponse($favourites, 'Video favourite successfully.');
+			}
+			else
+			{
+			$errorMsg = "Already given";       
+			return $this->sendError($errorMsg);
+			}
+       
+    }
+	
+	public function favoriteFlag(Request $request)
+    {
+        $data = $request->all();
+		
+		if($data['video_id']=='')
+		{
+			$errorMsg = "Page not found";       
+           return $this->sendError($errorMsg); 
+		}
+		else
+		{	
+			
+			$returnData['flag'] = 0;
+			$returnData['favourite'] = 0;
+			
+			$flag = StudentFlag::where("video_id",$data["video_id"])->where("user_id",Auth::guard('api')->user()->id)->first();
+			$favourite = StudentFavourites::where("video_id",$data["video_id"])->where("user_id",Auth::guard('api')->user()->id)->first();
+				if(isset($flag))
+				{
+					$returnData['flag'] = 1;
+				}
+				
+				if(isset($favourite))
+				{
+					$returnData['favourite'] = 1;
+				}
+
+			
+			return $this->sendResponse($returnData, 'flag  favourite Details');
+		}
+       
+
+    }
+	
+	public function myFavoriteVideo(Request $request)
+    {
+        	$input = $request->all();
+			$favourites = StudentFavourites::with("course")->where("user_id",Auth::guard('api')->user()->id)->paginate(10);
+			
+			return $this->sendResponse($favourites, 'My favourite videos.');
+			
+       
+    }
+	
+	
+	
 
 }

@@ -21,6 +21,17 @@ class Topic extends Model
         return $this->hasOne(Course::Class, 'id', 'course_id')->withDefault();
     }
 	
+	public function videos()
+    {
+        $query = $this->hasMany(Video::class, 'course_id');
+
+        return $query;
+    }
+	
+	public function videosTitles() {
+     return $this->hasMany(Video::class, 'topic_id')->select(['name', 'topic_id']);
+	}
+	
 	/* public function videos()
     {
 

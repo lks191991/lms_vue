@@ -28,6 +28,10 @@ class Course extends Model
         return $this->belongsTo(SubCategory::class,'sub_category_id');
     }
 
+	public function tutor()
+    {
+        return $this->belongsTo(User::class,"user_id");
+    }
     /*
      * Get all related videos.
      */
@@ -44,10 +48,25 @@ class Course extends Model
 
         return $query;
     }
+	
 
     public function total_lesson()
     {
-        $query = $this->hasMany(Topic::class, 'course_id');
+        $query = $this->hasMany(Video::class, 'course_id');
+
+        return $query;
+    }
+	
+	public function courseRating()
+    {
+        $query = $this->hasMany(Rating::class, 'course_video_id')->where('type','=', 'course');
+
+        return $query;
+    }
+	
+	public function videoRating()
+    {
+        $query = $this->hasMany(Rating::class, 'course_video_id')->where('type','=', 'video');
 
         return $query;
     }

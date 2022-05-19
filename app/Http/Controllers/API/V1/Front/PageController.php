@@ -9,11 +9,13 @@ use App\Models\Setting;
 use App\Models\SubCategory;
 use App\Models\Slider;
 use App\Models\Course;
+use App\Models\Rating;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ContactInquiry;
 use App\Models\Newsletter;
 use Illuminate\Support\Facades\Validator;
-   
+use DB;
+
 class PageController extends BaseController
 {
     
@@ -98,7 +100,7 @@ class PageController extends BaseController
 	public function homePageCourse()
     {
         
-			$courses = Course::take(3)->withCount('total_lesson')->get();
+			$courses = Course::take(3)->withCount('total_lesson')->withAvg('courseRating', 'rating')->get();
 			return $this->sendResponse($courses, 'courses Home');
 
     }
@@ -108,15 +110,15 @@ class PageController extends BaseController
 			$data = $request->all();
 			if(!empty($data['search']))
 			{
-				$courses = Course::where("name", 'like', '%'.$data['search'].'%')->withCount('total_lesson')->paginate(9);
+				$courses = Course::where("name", 'like', '%'.$data['search'].'%')->withCount('total_lesson')->withAvg('courseRating', 'rating')->paginate(9);
 			}
 			elseif(!empty($data['sub_category_id']))
 			{
-				$courses = Course::where("id",  $data['sub_category_id'])->withCount('total_lesson')->paginate(9);
+				$courses = Course::where("sub_category_id",  $data['sub_category_id'])->withCount('total_lesson')->withAvg('courseRating', 'rating')->paginate(9);
 			}
 			else
 			{
-				$courses = Course::withCount('total_lesson')->paginate(9);
+				$courses = Course::withCount('total_lesson')->withAvg('courseRating', 'rating')->paginate(9);
 			}
 			
 			return $this->sendResponse($courses, 'courses all');
@@ -135,7 +137,7 @@ class PageController extends BaseController
 		}
 		else
 		{
-			$page = Course::where(['id' => $data['sub_category_id']])->withCount('total_lesson')->get(); 
+			$page = Course::where(['id' => $data['sub_category_id']])->withCount('total_lesson')->withAvg('courseRating', 'rating')->get(); 
 			return $this->sendResponse($page, 'Course by sub category');
 		}
 
@@ -149,9 +151,15 @@ class PageController extends BaseController
            return $this->sendError($errorMsg); 
 		}
 		else
-		{
-			$page = Course::where(['id' => $data['course_id']])->withCount('total_lesson')->first(); 
-			return $this->sendResponse($page, 'Course Details');
+		{	
+			
+			$course = Course::where(['id' => $data['course_id']])->withCount(['total_lesson','courseRating'])->withAvg('courseRating', 'rating')->with(['tutor','topics','topics.videosTitles'])->first(); 
+			$returnData['course'] = $course;
+			
+			$review = Rating::where(['course_video_id' => $data['course_id']])->with(['user'])->paginate(10);
+			$returnData['review'] = $review;
+			$returnData['enrolled'] = 500;
+			return $this->sendResponse($returnData, 'Course Details');
 		}
        
 

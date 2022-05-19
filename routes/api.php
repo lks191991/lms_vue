@@ -48,6 +48,17 @@ Route::namespace('App\\Http\\Controllers\\API\V1\Front')->group(function () {
 		Route::post('change-profile', 'ProfileController@editProfile');
 		Route::post('change-profile-image', 'ProfileController@editProfileImage');
 		Route::post('profile', 'ProfileController@profile');
+		Route::post('checkout', 'PaymentController@checkout');
+		Route::post('payment', 'PaymentController@stripePost');
+		Route::post('my-payment', 'PaymentController@myPayments');
+		Route::post('my-courses', 'ProfileController@myCourses');
+		Route::post('my-course-details', 'ProfileController@myCourseDetails');
+		Route::post('video-view-update', 'ProfileController@videoViewUpdate');
+		Route::post('give-rating', 'ProfileController@ratingInsert');
+		Route::post('flag-video', 'ProfileController@flagVideo');
+		Route::post('favorite-video', 'ProfileController@favoriteVideo');
+		Route::post('favorite-flag', 'ProfileController@favoriteFlag');
+		Route::post('my-favorites', 'ProfileController@myFavoriteVideo');
 	});
 });
 

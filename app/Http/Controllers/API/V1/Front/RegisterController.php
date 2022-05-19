@@ -117,11 +117,11 @@ class RegisterController extends BaseController
 
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
             $user = Auth::user(); 
-           // $oClient = OClient::where('password_client', 1)->first();
-            $success['token'] =  $user->createToken('MyApp')->accessToken; 
+           $oClient = OClient::where('password_client', 1)->first();
+           // $success['token'] =  $user->createToken('MyApp')->accessToken; 
             $success['name'] =  $user->name;
             $success['email'] =  $user->email;
-           // $success['TokenAndRefreshToken'] = $this->getTokenAndRefreshToken($oClient, request('email'), request('password'));
+            $success['TokenAndRefreshToken'] = $this->getTokenAndRefreshToken($oClient, $request->email, $request->password);
    
             return $this->sendResponse($success, 'User login successfully.');
         }elseif(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
@@ -179,7 +179,7 @@ class RegisterController extends BaseController
     public function getTokenAndRefreshToken(OClient $oClient, $email, $password) { 
         $oClient = OClient::where('password_client', 1)->first();
         $http = new Client;
-        $response = $http->request('POST', 'http://mylemp-nginx/oauth/token', [
+        $response = $http->request('POST', 'http://local.lms.com/oauth/token', [
             'form_params' => [
                 'grant_type' => 'password',
                 'client_id' => $oClient->id,
@@ -190,7 +190,7 @@ class RegisterController extends BaseController
             ],
         ]);
         $result = json_decode((string) $response->getBody(), true);
-        return response()->json($result, $this->successStatus);
+        return response()->json($result);
     }
 	
 
