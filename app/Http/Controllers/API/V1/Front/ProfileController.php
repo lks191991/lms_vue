@@ -381,13 +381,18 @@ class ProfileController extends BaseController
 			if(isset($data['video_id']) && !empty($data['video_id']))
             {
                 $QnsAns = QnsAns::select('course_id', 'topic_id', 'video_id','question', 'ans1', 'ans2', 'ans3', 'ans4',)->where(['video_id' => $data['video_id']])->inRandomOrder()->limit(3)->get();
+                $returnData['quiz'] = $QnsAns;
+                $returnData['durationTime'] = 0;//in minutes
             }
             elseif(isset($data['course_id']) && !empty($data['course_id']))
             {
                 $QnsAns = QnsAns::select('course_id', 'topic_id', 'video_id','question', 'ans1', 'ans2', 'ans3', 'ans4',)->where(['course_id' => $data['course_id']])->inRandomOrder()->limit(25)->get();
+                $returnData['durationTime'] = 45;//in minutes
             }
             
 			
+            
+
 			return $this->sendResponse($QnsAns, 'Video Flag successfully.');
 			
        
