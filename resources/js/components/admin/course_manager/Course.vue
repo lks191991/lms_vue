@@ -155,7 +155,7 @@
                         
                         </div>
 						 <div class="form-group col-md-4">
-                            <img v-bind:src="imagePreview" width="50" height="50" v-show="showPreview"/>
+                            <img v-bind:src="'/'+imagePreview" width="50" height="50" v-show="showPreview"/>
                         </div>
 						</div>
 						
@@ -254,7 +254,7 @@
         */
         if ( /\.(jpe?g|png|gif)$/i.test( this.form.banner_image.name ) ) {
 
-            console.log("here");
+            //console.log("here");
             /*
             Fire the readAsDataURL method which will read the file in and
             upon completion fire a 'load' event which we will listen to and
