@@ -61,7 +61,8 @@ Route::namespace('App\\Http\\Controllers\\API\V1\Front')->group(function () {
 		Route::post('favorite-flag', 'ProfileController@favoriteFlag');
 		Route::post('my-favorites', 'ProfileController@myFavoriteVideo');
 		Route::post('update-video-time', 'ProfileController@updateVideoTime');
-		Route::post('get-quiz', 'ProfileController@getQuiz');
+		Route::post('get-quiz', 'QuizController@getQuiz');
+		Route::post('quiz-submit', 'QuizController@quizSubmit');
 	});
 });
 
