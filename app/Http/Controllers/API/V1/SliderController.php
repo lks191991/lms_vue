@@ -49,7 +49,10 @@ class SliderController extends BaseController
 
         return $this->sendResponse($sliders, 'slider list');
     }
-
+    public function show()
+    {
+       
+    }
 
     /**
      * Store a newly created resource in storage.
