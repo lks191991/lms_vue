@@ -393,7 +393,7 @@ class ProfileController extends BaseController
 			
             
 
-			return $this->sendResponse($QnsAns, 'Video Flag successfully.');
+			return $this->sendResponse($returnData, 'Video Flag successfully.');
 			
        
     }
