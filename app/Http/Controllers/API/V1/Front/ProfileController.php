@@ -12,6 +12,7 @@ use App\Models\StudentFlag;
 use App\Models\StudentFavourites;
 use App\Models\VideoWatchReport;
 use App\Models\Rating;
+use App\Models\QnsAns;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use Hash;
@@ -224,6 +225,7 @@ class ProfileController extends BaseController
 			$returnData['course'] = $course;
 			
 			$review = Rating::where(['course_video_id' => $data['course_id']])->with(['user'])->paginate(10);
+            
 			$returnData['review'] = $review;
 			$returnData['enrolled'] = 500;
 			return $this->sendResponse($returnData, 'Course Details');
@@ -369,6 +371,24 @@ class ProfileController extends BaseController
             }
 
 			return $this->sendResponse($video, 'videos time update.');
+			
+       
+    }
+
+    public function getQuiz(Request $request)
+    {
+        	$data = $request->all();
+			if(isset($data['video_id']) && !empty($data['video_id']))
+            {
+                $QnsAns = QnsAns::select('course_id', 'topic_id', 'video_id','question', 'ans1', 'ans2', 'ans3', 'ans4',)->where(['video_id' => $data['video_id']])->inRandomOrder()->limit(3)->get();
+            }
+            elseif(isset($data['course_id']) && !empty($data['course_id']))
+            {
+                $QnsAns = QnsAns::select('course_id', 'topic_id', 'video_id','question', 'ans1', 'ans2', 'ans3', 'ans4',)->where(['course_id' => $data['course_id']])->inRandomOrder()->limit(25)->get();
+            }
+            
+			
+			return $this->sendResponse($QnsAns, 'Video Flag successfully.');
 			
        
     }
