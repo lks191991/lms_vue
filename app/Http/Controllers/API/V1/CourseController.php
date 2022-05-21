@@ -89,7 +89,7 @@ class CourseController extends BaseController
             $file = request()->file('banner_image');
             $fileNameArr = explode('.', $fileName);
             $fileNameExt = end($fileNameArr);
-            $newName = date('His') . rand() . time() . '__' . $fileNameArr[0] . '.' . $fileNameExt;
+            $newName = rand() . time() .'.' . $fileNameExt;
 
             $file->move($destinationPath, $newName);
 			
@@ -148,7 +148,7 @@ class CourseController extends BaseController
             $file = request()->file('banner_image');
             $fileNameArr = explode('.', $fileName);
             $fileNameExt = end($fileNameArr);
-            $newName = date('His') . rand() . time() . '__' . $fileNameArr[0] . '.' . $fileNameExt;
+            $newName = rand() . time() .'.' . $fileNameExt;
 
             $file->move($destinationPath, $newName);
 			$oldImage = public_path($course->banner_image);
