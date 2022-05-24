@@ -197,7 +197,8 @@ class ProfileController extends BaseController
     {
 		$data = $request->all();
 		$user = Auth::user();
-		$userSubscription = UserSubscription::with('course')->where("user_id",Auth::guard('api')->user()->id)->where("status",'Success')->paginate(10);
+		$currentDate = Carbon::now()->format('Y-m-d');
+		$userSubscription = UserSubscription::with('course')->where("user_id",Auth::guard('api')->user()->id)->where("expired_on",">=",$currentDate)->where("status",'Success')->paginate(10);
 
 		return $this->sendResponse($userSubscription, 'my Courses list.');
 
@@ -206,12 +207,23 @@ class ProfileController extends BaseController
 	public function myCourseDetails(Request $request)
     {
         $data = $request->all();
-		$userSubscription = UserSubscription::where("user_id",Auth::guard('api')->user()->id)->where("course_id",$data['course_id'])->count();
-			if($userSubscription == 0)
+		$currentDate = Carbon::now()->format('Y-m-d');
+		$userSubscription = UserSubscription::where("user_id",Auth::guard('api')->user()->id)->where("course_id",$data['course_id']);
+			if($userSubscription->count() == 0)
 			{
 				$errorMsg = "Something went wrong please try again.";       
 				return $this->sendError($errorMsg); 
 			}
+			else
+			{
+				$subscription= $userSubscription->first();
+				if($subscription->expired_on < $currentDate)
+				{
+					$errorMsg = "Your Course has been expired.Please purchase again.";       
+					return $this->sendError($errorMsg); 
+				}
+			}
+			
 			
 		if($data['course_id']=='')
 		{

@@ -13,6 +13,7 @@ use Validator;
 use Hash;
 use Image;
 use Stripe;
+use Carbon\Carbon;
 
 class PaymentController extends BaseController
 {
@@ -82,7 +83,8 @@ class PaymentController extends BaseController
 		}
 		else
 		{
-			$userSubscription = UserSubscription::where("user_id",Auth::guard('api')->user()->id)->where("course_id",$data['course_id'])->count();
+			$currentDate = Carbon::now()->format('Y-m-d');
+			$userSubscription = UserSubscription::where("user_id",Auth::guard('api')->user()->id)->where("expired_on",">=",$currentDate)->where("course_id",$data['course_id'])->count();
 			if($userSubscription > 0)
 			{
 				$errorMsg = "Course already in your learning aacount.";       
@@ -156,6 +158,8 @@ class PaymentController extends BaseController
 		}
 		if($result['status'] == 'succeeded')
 		{
+			$expiringDate = Carbon::now()->addMonths(3)->format('Y-m-d');
+			
 				$coursePrice = $course->price;
 				$userSubscription = new UserSubscription();
 				$userSubscription->user_id = Auth::user()->id;
@@ -163,6 +167,7 @@ class PaymentController extends BaseController
 				$userSubscription->transaction_id = $result['id'];
 				$userSubscription->price = $price;
 				$userSubscription->status = 'Success';
+				$userSubscription->expired_on = $expiringDate;
 				
 				if(isset($data['code']) && !empty($data['code']))
 				{
