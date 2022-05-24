@@ -32,10 +32,10 @@
                     <th>Topic</th>
                     <th>Video</th>
                     <th>Question</th>
-                    <th>Ans 1</th>
-                    <th>Ans 2</th>
-                    <th>Ans 3</th>
-                    <th>Ans 4</th>
+                    <th>Option A</th>
+                    <th>Option B</th>
+                    <th>Option C</th>
+                    <th>Option D</th>
                     <th>Right Answer</th>
                     <th>Created</th>
                     <th>Action</th>
@@ -142,36 +142,44 @@
                            <has-error :form="form" field="question"></has-error>
                         </div>
                         <div class="form-group col-md-6">
-                            <label>Ans 1</label>
+                            <label>Option A</label>
                             <input v-model="form.ans1" type="text" name="ans1"
                                 class="form-control" :class="{ 'is-invalid': form.errors.has('ans1') }">
                             <has-error :form="form" field="ans1"></has-error>
                         </div>
                         <div class="form-group col-md-6">
-                            <label>Ans 2</label>
+                            <label>Option B</label>
                             <input v-model="form.ans2" type="text" name="ans2"
                                 class="form-control" :class="{ 'is-invalid': form.errors.has('ans2') }">
                             <has-error :form="form" field="ans2"></has-error>
                         </div>
                         <div class="form-group col-md-6">
-                            <label>Ans 3</label>
+                            <label>Option C</label>
                             <input v-model="form.ans3" type="text" name="ans3"
                                 class="form-control" :class="{ 'is-invalid': form.errors.has('ans3') }">
                             <has-error :form="form" field="ans3"></has-error>
                         </div>
                         <div class="form-group col-md-6">
-                            <label>Ans 4</label>
+                            <label>Option D</label>
                             <input v-model="form.ans4" type="text" name="ans4"
                                 class="form-control" :class="{ 'is-invalid': form.errors.has('ans4') }">
                             <has-error :form="form" field="ans4"></has-error>
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
+
                             <label>Right Answer</label>
-                            <input v-model="form.rightans" type="text" name="rightans"
-                                class="form-control" :class="{ 'is-invalid': form.errors.has('rightans') }">
+                            <select class="form-control" v-model="form.rightans" :class="{ 'is-invalid': form.errors.has('rightans') }">
+                              <option value="" :selected="'' == form.rightans">Select</option>
+                              <option value="A" :selected="'A' == form.rightans">A</option>
+							  <option value="B" :selected="'B' == form.rightans">B</option>
+                              <option value="C" :selected="'C' == form.rightans">C</option>
+                              <option value="D" :selected="'D' == form.rightans">D</option>
+                            </select>
                             <has-error :form="form" field="rightans"></has-error>
                         </div>
+                        
                     </div>
+                    
                     	<div class="form-group col-md-12">
                             <label>Status</label>
                             <toggle-button  :value="form.status" :sync="true" v-model="form.status" :labels="{checked: 'Yes', unchecked: 'No'}"  />

@@ -10,7 +10,9 @@ use App\Models\Course;
 use App\Models\Video;
 use App\Models\StudentFlag;
 use App\Models\StudentFavourites;
+use App\Models\VideoWatchReport;
 use App\Models\Rating;
+use App\Models\QnsAns;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use Hash;
@@ -223,6 +225,7 @@ class ProfileController extends BaseController
 			$returnData['course'] = $course;
 			
 			$review = Rating::where(['course_video_id' => $data['course_id']])->with(['user'])->paginate(10);
+            
 			$returnData['review'] = $review;
 			$returnData['enrolled'] = 500;
 			return $this->sendResponse($returnData, 'Course Details');
@@ -346,6 +349,33 @@ class ProfileController extends BaseController
        
     }
 	
+    public function updateVideoTime(Request $request)
+    {
+        	$input = $request->all();
+			$video = VideoWatchReport::where("user_id",Auth::guard('api')->user()->id)->where("course_id",$input['course_id'])->where("video_id",$input['video_id'])->first();
+			if(isset($video))
+            {
+                $video->duration = $input['duration'];
+                $video->percent = $input['percent'];
+                $video->seconds = $input['seconds'];
+                $video->save();
+            }
+            else{
+                $video = new VideoWatchReport(); 
+                $video->user_id = Auth::guard('api')->user()->id;
+                $video->course_id = $input['course_id'];
+                $video->video_id = $input['video_id'];
+                $video->duration = $input['duration'];
+                $video->percent = $input['percent'];
+                $video->seconds = $input['seconds'];
+            }
+
+			return $this->sendResponse($video, 'videos time update.');
+			
+       
+    }
+
+    
 	
 	
 

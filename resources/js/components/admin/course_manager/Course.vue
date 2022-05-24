@@ -84,7 +84,7 @@
 
                 <form @submit.prevent="editmode ? updateCourse() : createCourse()" >
                     <div class="modal-body">
-					
+					 @method('put')
 					<div class="row">
 					<div class="form-group col-md-4">
 
@@ -155,7 +155,7 @@
                         
                         </div>
 						 <div class="form-group col-md-4">
-                            <img v-bind:src="imagePreview" width="50" height="50" v-show="showPreview"/>
+                            <img v-bind:src="'/'+imagePreview" width="50" height="50" v-show="showPreview"/>
                         </div>
 						</div>
 						
@@ -254,7 +254,7 @@
         */
         if ( /\.(jpe?g|png|gif)$/i.test( this.form.banner_image.name ) ) {
 
-            console.log("here");
+            //console.log("here");
             /*
             Fire the readAsDataURL method which will read the file in and
             upon completion fire a 'load' event which we will listen to and
@@ -352,7 +352,7 @@
 				formData.append(key, value)
 				});
 				
-              axios.post('api/course',formData)
+              axios.post('/api/course',formData)
               .then((data)=>{
                 if(data.data.success){
                   $('#addNew').modal('hide');
@@ -392,7 +392,7 @@
 				formData.append(key, value)
 				})
 				
-              axios.post('api/course/update/',formData)
+              axios.post('/api/course/update/',formData)
               .then((response) => {
                   // success
 				  this.form.reset();
@@ -429,7 +429,7 @@
 
                       // Send request to the server
                         if (result.value) {
-                              this.form.delete('api/course/'+id).then(()=>{
+                              this.form.delete('/api/course/'+id).then(()=>{
                                       Swal.fire(
                                       'Deleted!',
                                       'Your file has been deleted.',

@@ -42,6 +42,7 @@ Route::namespace('App\\Http\\Controllers\\API\V1\Front')->group(function () {
     Route::post('contact-us', 'PageController@sendContact');
     Route::post('save-newsletter', 'PageController@saveNewsletter');
     Route::post('course-view-update', 'PageController@courseViewUpdate');
+	
 
 	Route::middleware(['auth:api'])->group(function () {
 		Route::post('change_password', 'ProfileController@changepassword');
@@ -59,6 +60,9 @@ Route::namespace('App\\Http\\Controllers\\API\V1\Front')->group(function () {
 		Route::post('favorite-video', 'ProfileController@favoriteVideo');
 		Route::post('favorite-flag', 'ProfileController@favoriteFlag');
 		Route::post('my-favorites', 'ProfileController@myFavoriteVideo');
+		Route::post('update-video-time', 'ProfileController@updateVideoTime');
+		Route::post('get-quiz', 'QuizController@getQuiz');
+		Route::post('quiz-submit', 'QuizController@quizSubmit');
 	});
 });
 

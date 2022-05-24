@@ -89,7 +89,7 @@ class CourseController extends BaseController
             $file = request()->file('banner_image');
             $fileNameArr = explode('.', $fileName);
             $fileNameExt = end($fileNameArr);
-            $newName = date('His') . rand() . time() . '__' . $fileNameArr[0] . '.' . $fileNameExt;
+            $newName = rand() . time() .'.' . $fileNameExt;
 
             $file->move($destinationPath, $newName);
 			
@@ -104,6 +104,7 @@ class CourseController extends BaseController
 			$course->price  =  $request->get('price');
 			$course->course_type =  $request->get('course_type');
 			$course->demo_url =  $request->get('demo_url');
+            $course->user_id =  auth()->user()->id;
 			$course->description  =  $request->get('description');
 			//$course->status = ($request->get('status') !== null)? $request->get('status'):0;
 			$course->save();
@@ -148,7 +149,7 @@ class CourseController extends BaseController
             $file = request()->file('banner_image');
             $fileNameArr = explode('.', $fileName);
             $fileNameExt = end($fileNameArr);
-            $newName = date('His') . rand() . time() . '__' . $fileNameArr[0] . '.' . $fileNameExt;
+            $newName = rand() . time() .'.' . $fileNameExt;
 
             $file->move($destinationPath, $newName);
 			$oldImage = public_path($course->banner_image);
@@ -168,6 +169,7 @@ class CourseController extends BaseController
 			$course->demo_url =  $request->get('demo_url');
 			$course->total_length_minutes =  $request->get('total_length_minutes');
 			$course->description  =  $request->get('description');
+            
 			//$course->status = ($request->get('status') !== null)? $request->get('status'):0;
 			$course->save();
 
