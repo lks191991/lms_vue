@@ -387,7 +387,17 @@ class ProfileController extends BaseController
 			
        
     }
+    public function videoViewUpdate(Request $request)
+    {
+        	$input = $request->all();
+			$homePageCategory = Video::where("id",$input["video_id"])->first();
+			$total_views = $homePageCategory->total_views+1;
+			$homePageCategory->total_views = $total_views;
+			$homePageCategory->save();
+			return $this->sendResponse($homePageCategory->total_views, 'Video View');
+       
 
+    }
     
 	
 	
