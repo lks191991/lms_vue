@@ -179,7 +179,7 @@ class RegisterController extends BaseController
     public function getTokenAndRefreshToken(OClient $oClient, $email, $password) { 
         $oClient = OClient::where('password_client', 1)->first();
         $http = new Client;
-        $response = $http->request('POST', 'http://local.lms.com/oauth/token', [
+        $response = $http->request('POST', env('OAUTHURL'), [
             'form_params' => [
                 'grant_type' => 'password',
                 'client_id' => $oClient->id,
