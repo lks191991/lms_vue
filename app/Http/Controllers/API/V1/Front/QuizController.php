@@ -69,6 +69,8 @@ class QuizController extends BaseController
     public function quizSubmit(Request $request)
     {
         	$input = $request->all();
+			print_r($input);
+			exit;
             $ansdata = json_decode($input['ansdata']);
             $totalQns = 0;
             $rightQns = 0;
