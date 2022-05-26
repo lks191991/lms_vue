@@ -315,7 +315,7 @@ class ProfileController extends BaseController
 			{
 			$favourite = StudentFavourites::where("video_id",$input["video_id"])->where("user_id",Auth::guard('api')->user()->id)->first();
 			$favourite->delete();
-			return $this->sendResponse($favourites, 'Video un-favourite successfully.');
+			return $this->sendResponse([], 'Video un-favourite successfully.');
 			}
        
     }
