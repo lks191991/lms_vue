@@ -32,6 +32,10 @@ class Topic extends Model
      return $this->hasMany(Video::class, 'topic_id')->select(['name', 'topic_id']);
 	}
 	
+	public function topicVideos() {
+     return $this->hasMany(Video::class, 'topic_id');
+	}
+	
 	/* public function videos()
     {
 

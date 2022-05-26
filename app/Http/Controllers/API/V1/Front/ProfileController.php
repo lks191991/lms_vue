@@ -234,8 +234,9 @@ class ProfileController extends BaseController
 		else
 		{	
 			
-			$course = Course::where(['id' => $data['course_id']])->withCount(['total_lesson','courseRating'])->withAvg('courseRating', 'rating')->with(['tutor','topics','topics.videos'])->first(); 
+			$course = Course::where(['id' => $data['course_id']])->withCount(['total_lesson','courseRating'])->withAvg('courseRating', 'rating')->with(['tutor','topics','topics.topicVideos'])->first(); 
 			$returnData['course'] = $course;
+			
 			
 			$review = Rating::where(['course_video_id' => $data['course_id']])->with(['user'])->paginate(10);
             
