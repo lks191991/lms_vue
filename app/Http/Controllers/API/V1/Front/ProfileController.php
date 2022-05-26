@@ -357,7 +357,7 @@ class ProfileController extends BaseController
 	public function myFavoriteVideo(Request $request)
     {
         	$input = $request->all();
-			$favourites = StudentFavourites::with("course")->where("user_id",Auth::guard('api')->user()->id)->paginate(10);
+			$favourites = StudentFavourites::with("video")->where("user_id",Auth::guard('api')->user()->id)->paginate(10);
 			
 			return $this->sendResponse($favourites, 'My favourite videos.');
 			
