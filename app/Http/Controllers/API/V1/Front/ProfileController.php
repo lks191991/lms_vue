@@ -264,7 +264,7 @@ class ProfileController extends BaseController
 			$rating->comment = $input["comment"];
 			$rating->status = 1;
 			$rating->save();
-			return $this->sendResponse($homePageCategory->total_views, 'Thank you');
+			return $this->sendResponse($rating, 'Thank you');
 			}
 			else
 			{
