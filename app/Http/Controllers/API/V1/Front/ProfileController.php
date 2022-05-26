@@ -312,8 +312,9 @@ class ProfileController extends BaseController
 			}
 			else
 			{
-			$errorMsg = "Already given";       
-			return $this->sendError($errorMsg);
+			$favourite = StudentFavourites::where("video_id",$input["video_id"])->where("user_id",Auth::guard('api')->user()->id)->first();
+			$favourite->delete();
+			return $this->sendResponse($favourites, 'Video un-favourite successfully.');
 			}
        
     }
