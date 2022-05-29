@@ -27,7 +27,7 @@ class Rating extends Model
 
     public function course()
     {
-        return $this->belongsTo(Course::class,'course_video_id')->where('type','course');
+        return $this->belongsTo(Course::class,'course_video_id');
     }
 	
 	
