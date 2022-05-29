@@ -88,6 +88,8 @@ class PageController extends BaseController
        
 
     }
+
+	
 	
 	public function homeSlider()
     {

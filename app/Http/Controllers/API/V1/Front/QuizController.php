@@ -34,7 +34,7 @@ class QuizController extends BaseController
                 $returnData['quiz'] = $QnsAns;
                 $returnData['durationTime'] = 0;//in minutes
 
-                $quizScore = QuizScore::where(['video_id' => $data['video_id']])->first(); 
+                $quizScore = QuizScore::where(['video_id' => $data['video_id']])->where(['quiz_type' => 'video'])->first(); 
                 if(isset($quizScore))
                 {
                     $returnData['quizScore'] = $quizScore;
@@ -49,7 +49,7 @@ class QuizController extends BaseController
                 $QnsAns = QnsAns::select('id','course_id', 'topic_id', 'video_id','question', 'ans1', 'ans2', 'ans3', 'ans4')->where(['course_id' => $data['course_id']])->inRandomOrder()->limit(25)->get();
                 $returnData['quiz'] = $QnsAns;
                 $returnData['durationTime'] = 45;//in minutes
-                $quizScore = QuizScore::where(['course_id' => $data['course_id']])->first(); 
+                $quizScore = QuizScore::where(['course_id' => $data['course_id']])->where(['quiz_type' => 'course'])->first(); 
                 if(isset($quizScore))
                 {
                     $returnData['quizScore'] = $quizScore;
@@ -61,7 +61,7 @@ class QuizController extends BaseController
             }
             
 		
-			return $this->sendResponse($returnData, 'Video Flag successfully.');
+			return $this->sendResponse($returnData, 'quizScore.');
 			
        
     }
