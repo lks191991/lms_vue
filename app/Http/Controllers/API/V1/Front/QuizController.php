@@ -27,7 +27,8 @@ class QuizController extends BaseController
     
     public function getQuiz(Request $request)
     {
-        $userid = Auth::guard('api')->user()->id;
+
+            $userid = Auth::guard('api')->user()->id;
         	$data = $request->all();
 			if(isset($data['video_id']) && !empty($data['video_id']))
             {
@@ -128,6 +129,17 @@ class QuizController extends BaseController
 			return $this->sendResponse($quizScore, 'Quiz submit successfully.');
 			
 
+    }
+
+    public function myQuizHistory(Request $request)
+    {
+        	$input = $request->all();
+            $userid = Auth::guard('api')->user()->id;
+            $quizScores = QuizScore::where(['user_id' => $userid])->paginate(10); 
+			
+			return $this->sendResponse($quizScores, 'my Quiz History.');
+			
+       
     }
 	
 

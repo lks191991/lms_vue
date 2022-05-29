@@ -63,6 +63,7 @@ Route::namespace('App\\Http\\Controllers\\API\V1\Front')->group(function () {
 		Route::post('update-video-time', 'ProfileController@updateVideoTime');
 		Route::post('get-quiz', 'QuizController@getQuiz');
 		Route::post('quiz-submit', 'QuizController@quizSubmit');
+		Route::post('my-quiz-history', 'QuizController@myQuizHistory');
 	});
 });
 
