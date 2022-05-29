@@ -82,6 +82,7 @@ class QuizController extends BaseController
             $totalQns = 0;
             $rightQns = 0;
             $wrongQns = 0;
+            $percent = 0;
             foreach($ansdata as $ans)
             {
                 $totalQns++;
@@ -107,7 +108,11 @@ class QuizController extends BaseController
                 }
             }
 
-            $percent = (($rightQns/$totalQns) *100);
+            if($rightQns>0)
+            {
+                $percent = (($rightQns/$totalQns) *100);
+            }
+           
             $quizScore = new QuizScore(); 
             $quizScore->user_id = Auth::guard('api')->user()->id;
             $quizScore->course_id = $input['course_id'];
@@ -116,7 +121,7 @@ class QuizController extends BaseController
             $quizScore->total_right_ans = $rightQns;
             $quizScore->total_wrong_ans = $wrongQns;
             $quizScore->total_qns = $totalQns;
-            $quizScore->percent = $percent;
+            $quizScore->percent = round($percent);
 			$quizScore->save();
                 
             
