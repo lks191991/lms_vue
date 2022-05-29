@@ -27,35 +27,38 @@ class QuizController extends BaseController
     
     public function getQuiz(Request $request)
     {
+        $userid = Auth::guard('api')->user()->id;
         	$data = $request->all();
 			if(isset($data['video_id']) && !empty($data['video_id']))
             {
-                $QnsAns = QnsAns::select('id','course_id', 'topic_id', 'video_id','question', 'ans1', 'ans2', 'ans3', 'ans4')->where(['video_id' => $data['video_id']])->inRandomOrder()->limit(3)->get();
-                $returnData['quiz'] = $QnsAns;
+                
                 $returnData['durationTime'] = 0;//in minutes
 
-                $quizScore = QuizScore::where(['video_id' => $data['video_id']])->where(['quiz_type' => 'video'])->first(); 
+                $quizScore = QuizScore::where(['video_id' => $data['video_id']])->where(['quiz_type' => 'video'])->where(['user_id' => $userid])->first(); 
                 if(isset($quizScore))
                 {
                     $returnData['quizScore'] = $quizScore;
                 }
                 else
                 {
+                    $QnsAns = QnsAns::select('id','course_id', 'topic_id', 'video_id','question', 'ans1', 'ans2', 'ans3', 'ans4')->where(['video_id' => $data['video_id']])->inRandomOrder()->limit(3)->get();
+                $returnData['quiz'] = $QnsAns;
                     $returnData['quizScore'] = 0; 
                 } 
             }
             elseif(isset($data['course_id']) && !empty($data['course_id']))
             {
-                $QnsAns = QnsAns::select('id','course_id', 'topic_id', 'video_id','question', 'ans1', 'ans2', 'ans3', 'ans4')->where(['course_id' => $data['course_id']])->inRandomOrder()->limit(25)->get();
-                $returnData['quiz'] = $QnsAns;
+                
                 $returnData['durationTime'] = 45;//in minutes
-                $quizScore = QuizScore::where(['course_id' => $data['course_id']])->where(['quiz_type' => 'course'])->first(); 
+                $quizScore = QuizScore::where(['course_id' => $data['course_id']])->where(['quiz_type' => 'course'])->where(['user_id' => $userid])->first(); 
                 if(isset($quizScore))
                 {
                     $returnData['quizScore'] = $quizScore;
                 }
                 else
                 {
+                    $QnsAns = QnsAns::select('id','course_id', 'topic_id', 'video_id','question', 'ans1', 'ans2', 'ans3', 'ans4')->where(['course_id' => $data['course_id']])->inRandomOrder()->limit(25)->get();
+                    $returnData['quiz'] = $QnsAns;
                     $returnData['quizScore'] = 0; 
                 } 
             }
