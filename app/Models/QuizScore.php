@@ -19,6 +19,6 @@ class QuizScore extends Model
     
     public function course()
     {
-        return $this->belongsTo(Course::class,'course_video_id');
+        return $this->belongsTo(Course::class,'course_id');
     }
 }
