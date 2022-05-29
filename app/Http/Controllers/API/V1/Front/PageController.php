@@ -238,5 +238,12 @@ class PageController extends BaseController
 
     }
 
+	public function homePageReview()
+    {
+        
+			$ratings = Rating::with(["course","user"])->take(5)->get();
+			return $this->sendResponse($ratings, 'ratings Home');
+
+    }
 
 }
