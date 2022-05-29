@@ -135,7 +135,7 @@ class QuizController extends BaseController
     {
         	$input = $request->all();
             $userid = Auth::guard('api')->user()->id;
-            $quizScores = QuizScore::where(['user_id' => $userid])->where(['quiz_type' => 'course'])->paginate(10); 
+            $quizScores = QuizScore::with("course")->where(['user_id' => $userid])->where(['quiz_type' => 'course'])->paginate(10); 
 			
 			return $this->sendResponse($quizScores, 'my Quiz History.');
 			
