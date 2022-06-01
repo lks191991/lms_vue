@@ -46,7 +46,7 @@ Route::namespace('App\\Http\\Controllers\\API\V1\Front')->group(function () {
     Route::post('contact-us', 'PageController@sendContact');
     Route::post('save-newsletter', 'PageController@saveNewsletter');
     Route::post('course-view-update', 'PageController@courseViewUpdate');
-	
+	Route::post('home-page-review', 'PageController@homePageReview');
 
 	Route::middleware(['auth:api'])->group(function () {
 		Route::post('change_password', 'ProfileController@changepassword');
@@ -67,6 +67,7 @@ Route::namespace('App\\Http\\Controllers\\API\V1\Front')->group(function () {
 		Route::post('update-video-time', 'ProfileController@updateVideoTime');
 		Route::post('get-quiz', 'QuizController@getQuiz');
 		Route::post('quiz-submit', 'QuizController@quizSubmit');
+		Route::post('my-quiz-history', 'QuizController@myQuizHistory');
 	});
 });
 

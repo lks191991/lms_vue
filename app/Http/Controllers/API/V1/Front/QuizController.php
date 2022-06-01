@@ -27,41 +27,45 @@ class QuizController extends BaseController
     
     public function getQuiz(Request $request)
     {
+
+            $userid = Auth::guard('api')->user()->id;
         	$data = $request->all();
 			if(isset($data['video_id']) && !empty($data['video_id']))
             {
-                $QnsAns = QnsAns::select('id','course_id', 'topic_id', 'video_id','question', 'ans1', 'ans2', 'ans3', 'ans4')->where(['video_id' => $data['video_id']])->inRandomOrder()->limit(3)->get();
-                $returnData['quiz'] = $QnsAns;
+                
                 $returnData['durationTime'] = 0;//in minutes
 
-                $quizScore = QuizScore::where(['video_id' => $data['video_id']])->first(); 
+                $quizScore = QuizScore::where(['video_id' => $data['video_id']])->where(['quiz_type' => 'video'])->where(['user_id' => $userid])->first(); 
                 if(isset($quizScore))
                 {
                     $returnData['quizScore'] = $quizScore;
                 }
                 else
                 {
+                    $QnsAns = QnsAns::select('id','course_id', 'topic_id', 'video_id','question', 'ans1', 'ans2', 'ans3', 'ans4')->where(['video_id' => $data['video_id']])->inRandomOrder()->limit(3)->get();
+                $returnData['quiz'] = $QnsAns;
                     $returnData['quizScore'] = 0; 
                 } 
             }
             elseif(isset($data['course_id']) && !empty($data['course_id']))
             {
-                $QnsAns = QnsAns::select('id','course_id', 'topic_id', 'video_id','question', 'ans1', 'ans2', 'ans3', 'ans4')->where(['course_id' => $data['course_id']])->inRandomOrder()->limit(25)->get();
-                $returnData['quiz'] = $QnsAns;
+                
                 $returnData['durationTime'] = 45;//in minutes
-                $quizScore = QuizScore::where(['course_id' => $data['course_id']])->first(); 
+                $quizScore = QuizScore::where(['course_id' => $data['course_id']])->where(['quiz_type' => 'course'])->where(['user_id' => $userid])->first(); 
                 if(isset($quizScore))
                 {
                     $returnData['quizScore'] = $quizScore;
                 }
                 else
                 {
+                    $QnsAns = QnsAns::select('id','course_id', 'topic_id', 'video_id','question', 'ans1', 'ans2', 'ans3', 'ans4')->where(['course_id' => $data['course_id']])->inRandomOrder()->limit(25)->get();
+                    $returnData['quiz'] = $QnsAns;
                     $returnData['quizScore'] = 0; 
                 } 
             }
             
 		
-			return $this->sendResponse($returnData, 'Video Flag successfully.');
+			return $this->sendResponse($returnData, 'quizScore.');
 			
        
     }
@@ -79,6 +83,7 @@ class QuizController extends BaseController
             $totalQns = 0;
             $rightQns = 0;
             $wrongQns = 0;
+            $percent = 0;
             foreach($ansdata as $ans)
             {
                 $totalQns++;
@@ -104,7 +109,11 @@ class QuizController extends BaseController
                 }
             }
 
-            $percent = (($rightQns/$totalQns) *100);
+            if($rightQns>0)
+            {
+                $percent = (($rightQns/$totalQns) *100);
+            }
+           
             $quizScore = new QuizScore(); 
             $quizScore->user_id = Auth::guard('api')->user()->id;
             $quizScore->course_id = $input['course_id'];
@@ -113,13 +122,24 @@ class QuizController extends BaseController
             $quizScore->total_right_ans = $rightQns;
             $quizScore->total_wrong_ans = $wrongQns;
             $quizScore->total_qns = $totalQns;
-            $quizScore->percent = $percent;
+            $quizScore->percent = round($percent);
 			$quizScore->save();
                 
             
 			return $this->sendResponse($quizScore, 'Quiz submit successfully.');
 			
 
+    }
+
+    public function myQuizHistory(Request $request)
+    {
+        	$input = $request->all();
+            $userid = Auth::guard('api')->user()->id;
+            $quizScores = QuizScore::with("course")->where(['user_id' => $userid])->where(['quiz_type' => 'course'])->paginate(10); 
+			
+			return $this->sendResponse($quizScores, 'my Quiz History.');
+			
+       
     }
 	
 

@@ -17,4 +17,8 @@ class QuizScore extends Model
     protected $table ='quiz_score';
     protected $fillable = ['course_id', 'user_id', 'video_id','quiz_type', 'total_right_ans', 'total_wrong_ans', 'total_qns', 'percent'];
     
+    public function course()
+    {
+        return $this->belongsTo(Course::class,'course_id');
+    }
 }
