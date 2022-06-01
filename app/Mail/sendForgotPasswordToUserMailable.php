@@ -16,10 +16,11 @@ class sendForgotPasswordToUserMailable extends Mailable
      *
      * @return void
      */
-    public function __construct($data, $token)
+    public function __construct($data, $token,$api=null)
     {
         $this->data = $data;
 		$this->token = $token;
+		$this->api = $api;
     }
 
     /**
@@ -33,7 +34,14 @@ class sendForgotPasswordToUserMailable extends Mailable
         $adminuser_details = (array)$this->data;
         $adminuser_details['token'] = $this->token;
 		$this->subject("Password Reset Link");
-
-        return $this->markdown('emails.ForgotPasswordEmail', compact('adminuser_details'));
+		if($this->api==null)
+		{
+			return $this->markdown('emails.ForgotPasswordEmail', compact('adminuser_details'));
+		}
+		else
+		{
+			return $this->markdown('emails.ForgotPasswordEmailAPI', compact('adminuser_details'));
+		}
+        
     }
 }

@@ -29,7 +29,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::namespace('App\\Http\\Controllers\\API\V1\Front')->group(function () {
 	Route::post('login', 'RegisterController@login');
 	Route::post('register', 'RegisterController@register');
-	Route::post('forgotpassword', 'RegisterController@forgotpassword');
+	Route::post('forgotpassword', 'ForgotPasswordController@forgotpassword');
+	Route::get('forgot-password-validate', 'ForgotPasswordController@forgotPasswordValidate');
+	Route::post('reset-password', 'ForgotPasswordController@updatePassword');
+	
+
 	Route::get('page/{id}', 'PageController@index');
 	Route::get('setting', 'PageController@setting');
 	Route::get('nav-course-menu', 'PageController@courseMenu');
