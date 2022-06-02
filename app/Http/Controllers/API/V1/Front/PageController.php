@@ -15,6 +15,7 @@ use App\Models\ContactInquiry;
 use App\Models\Newsletter;
 use Illuminate\Support\Facades\Validator;
 use DB;
+use App\Mail\sendContactInquiry;
 
 class PageController extends BaseController
 {
@@ -102,7 +103,7 @@ class PageController extends BaseController
 	public function homePageCourse()
     {
         
-			$courses = Course::take(3)->withCount('total_lesson')->withAvg('courseRating', 'rating')->get();
+			$courses = Course::take(3)->with("tutor")->withCount('total_lesson')->withAvg('courseRating', 'rating')->get();
 			return $this->sendResponse($courses, 'courses Home');
 
     }
@@ -112,15 +113,15 @@ class PageController extends BaseController
 			$data = $request->all();
 			if(!empty($data['search']))
 			{
-				$courses = Course::where("name", 'like', '%'.$data['search'].'%')->withCount('total_lesson')->withAvg('courseRating', 'rating')->paginate(9);
+				$courses = Course::where("name", 'like', '%'.$data['search'].'%')->with("tutor")->withCount('total_lesson')->withAvg('courseRating', 'rating')->paginate(9);
 			}
 			elseif(!empty($data['sub_category_id']))
 			{
-				$courses = Course::where("sub_category_id",  $data['sub_category_id'])->withCount('total_lesson')->withAvg('courseRating', 'rating')->paginate(9);
+				$courses = Course::where("sub_category_id",  $data['sub_category_id'])->with("tutor")->withCount('total_lesson')->withAvg('courseRating', 'rating')->paginate(9);
 			}
 			else
 			{
-				$courses = Course::withCount('total_lesson')->withAvg('courseRating', 'rating')->paginate(9);
+				$courses = Course::withCount('total_lesson')->withAvg('courseRating', 'rating')->with("tutor")->paginate(9);
 			}
 			
 			return $this->sendResponse($courses, 'courses all');
@@ -139,7 +140,7 @@ class PageController extends BaseController
 		}
 		else
 		{
-			$page = Course::where(['id' => $data['sub_category_id']])->withCount('total_lesson')->withAvg('courseRating', 'rating')->get(); 
+			$page = Course::where(['id' => $data['sub_category_id']])->with("tutor")->withCount('total_lesson')->withAvg('courseRating', 'rating')->get(); 
 			return $this->sendResponse($page, 'Course by sub category');
 		}
 
@@ -155,7 +156,7 @@ class PageController extends BaseController
 		else
 		{	
 			
-			$course = Course::where(['id' => $data['course_id']])->withCount(['total_lesson','courseRating'])->withAvg('courseRating', 'rating')->with(['tutor','topics','topics.videosTitles'])->first(); 
+			$course = Course::where(['id' => $data['course_id']])->with("tutor")->withCount(['total_lesson','courseRating'])->withAvg('courseRating', 'rating')->with(['tutor','topics','topics.videosTitles'])->first(); 
 			$returnData['course'] = $course;
 			
 			$review = Rating::where(['course_video_id' => $data['course_id']])->with(['user'])->paginate(10);
@@ -205,7 +206,7 @@ class PageController extends BaseController
         $sendTo = $setting->admin_email;
         //$sendTo = 'xtraclass@mailinator.com';
 	
-		//Mail::to($setting->val, "New contact inquiry")->send(new sendContactInquiry($data));    
+		Mail::to($setting->val, "New contact inquiry")->send(new sendContactInquiry($data));    
 		
 		return $this->sendResponse($contactInquiry, 'Your enquiry has been sent successfully.');
 
