@@ -206,7 +206,7 @@ class PageController extends BaseController
         $sendTo = $setting->admin_email;
         //$sendTo = 'xtraclass@mailinator.com';
 	
-		Mail::to($setting->val, "New contact inquiry")->send(new sendContactInquiry($data));    
+		Mail::to($sendTo, "New contact inquiry")->send(new sendContactInquiry($data));    
 		
 		return $this->sendResponse($contactInquiry, 'Your enquiry has been sent successfully.');
 
