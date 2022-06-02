@@ -47,7 +47,7 @@ class ForgotPasswordController extends BaseController
             $update_pass = DB::table('users')->where('id', $admin_details[0]->id)->update(['remember_token' => $token]);
 			
             Mail::to($data['email'],'Password Reset Link')->send(new sendForgotPasswordToUserMailable($admin_details[0], $token,1));
-			 return $this->sendResponse($data, 'Success! password reset link has been sent to your email.');
+			 return $this->sendResponse($data, 'Success! password reset OTP has been sent to your email.');
 		} else {
 			return $this->sendError('Email does not exists.');
 		}
