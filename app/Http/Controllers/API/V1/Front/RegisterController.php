@@ -67,7 +67,7 @@ class RegisterController extends BaseController
         $input['type'] = 'student';
         $input['contact'] = $input['contact'];
         $input['status'] = 1;
-		$input['email_verified_at'] = Carbon::now()->getTimestamp();;
+		$input['email_verified_at'] = Carbon::now()->getTimestamp();
         //pr($input); die;
         $user = User::create($input);
         $success['token'] =  $user->createToken('MyApp')->accessToken;
@@ -119,8 +119,11 @@ class RegisterController extends BaseController
 
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
             $user = Auth::user(); 
-				$user1 = User::find($user->id)
-				$user1->last_login = Carbon::now()->toDateTimeString();
+			
+				
+				$user1 = User::find($user->id);
+				
+				$user1->last_login = Carbon::now();
 				$user1->save();
            $oClient = OClient::where('password_client', 1)->first();
            // $success['token'] =  $user->createToken('MyApp')->accessToken; 
