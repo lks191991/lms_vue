@@ -29,7 +29,7 @@ class RegisterController extends BaseController
      */
     public function register(Request $request)
     {
-        $options['allow_img_size'] = 10;
+       $options['allow_img_size'] = 10;
         $validator = Validator::make($request->all(), [
             'name' => 'required|sanitizeScripts|max:255',
             'contact' => 'required|sanitizeScripts|max:20',
@@ -62,7 +62,7 @@ class RegisterController extends BaseController
         }
 
         $input = $request->all();
-       
+		$psw = $input['password'];
         $input['password'] = bcrypt($input['password']);
         $input['type'] = 'student';
         $input['contact'] = $input['contact'];
@@ -70,6 +70,7 @@ class RegisterController extends BaseController
 		$input['email_verified_at'] = Carbon::now()->getTimestamp();
         //pr($input); die;
         $user = User::create($input);
+		$input['password'] = $psw;
         $success['token'] =  $user->createToken('MyApp')->accessToken;
         $success['name'] =  $user->name;
         $success['status'] =  1;
@@ -201,5 +202,66 @@ class RegisterController extends BaseController
         return response()->json($result);
     }
 	
+	/**
+     * Register api
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function tutorRegister(Request $request)
+    {
+        $options['allow_img_size'] = 10;
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|sanitizeScripts|max:255',
+            'contact' => 'required|sanitizeScripts|max:20',
+            'email' => 'required|max:255|sanitizeScripts|email|unique:users|regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix',
+            'password' => 'required|max:255|sanitizeScripts|min:8',
+            
+        ],
+        [
+            'email.regex' => 'The email must be a valid email address.',
+            'password.regex' => "Password contains At least one uppercase, At least one digit and At least it should have 8 characters long."
+        ]);
+   
+        if($validator->fails()){
+           //return $this->sendError('Validation Error.', $validator->errors()); 
+           $errors = $validator->errors();
+           $errorMsg = '';
+           if($errors->first('name'))
+                $errorMsg = $errors->first('name');
+			 elseif($errors->first('email'))
+               $errorMsg = $errors->first('email');
+           elseif($errors->first('contact'))
+               $errorMsg = $errors->first('contact'); 
+           elseif($errors->first('email'))
+               $errorMsg = $errors->first('email');               
+           elseif($errors->first('password'))
+               $errorMsg = $errors->first('password'); 
+          
+           return $this->sendError($errorMsg); 
+           
+        }
+
+        $input = $request->all();
+		$psw = $input['password'];
+        $input['password'] = bcrypt($input['password']);
+        $input['type'] = 'user';
+        $input['contact'] = $input['contact'];
+        $input['status'] = 1;
+		$input['email_verified_at'] = Carbon::now()->getTimestamp();
+        //pr($input); die;
+        $user = User::create($input);
+		$input['password'] = $psw;
+        $success['token'] =  $user->createToken('MyApp')->accessToken;
+        $success['name'] =  $user->name;
+        $success['status'] =  1;
+		$success['contact'] =  $user->contact;
+        $success['email'] =  $user->email;
+        //$oClient = OClient::where('password_client', 1)->first();
+        //$success['TokenAndRefreshToken'] = $this->getTokenAndRefreshToken($oClient, request('email'), request('password'));
+   
+        Mail::to($input['email'],'Registration Email')->send(new sendAPIRegisterToTechnicianMailable($input));  
+   
+        return $this->sendResponse($success, 'User has been registered successfully.');
+    }
 
 }
