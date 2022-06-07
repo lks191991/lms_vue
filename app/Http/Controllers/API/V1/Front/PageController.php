@@ -159,7 +159,7 @@ class PageController extends BaseController
 			$course = Course::where(['id' => $data['course_id']])->with("tutor")->withCount(['total_lesson','courseRating'])->withAvg('courseRating', 'rating')->with(['tutor','topics','topics.videosTitles'])->first(); 
 			$returnData['course'] = $course;
 			
-			$review = Rating::where(['course_video_id' => $data['course_id']])->with(['user'])->paginate(10);
+			$review = Rating::where(['course_video_id' => $data['course_id']])->with(['user'])->paginate(3);
 			$returnData['review'] = $review;
 			$returnData['enrolled'] = 500;
 			return $this->sendResponse($returnData, 'Course Details');
