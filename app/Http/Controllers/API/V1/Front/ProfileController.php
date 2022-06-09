@@ -370,10 +370,13 @@ class ProfileController extends BaseController
 			$video = VideoWatchReport::where("user_id",Auth::guard('api')->user()->id)->where("course_id",$input['course_id'])->where("video_id",$input['video_id'])->first();
 			if(isset($video))
             {
+				if($input['seconds'] > $video->seconds)
+				{
                 $video->duration = $input['duration'];
                 $video->percent = $input['percent'];
                 $video->seconds = $input['seconds'];
                 $video->save();
+				}
             }
             else{
                 $video = new VideoWatchReport(); 

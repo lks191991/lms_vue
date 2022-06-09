@@ -18,9 +18,12 @@ Route::get('/', function () {
     return redirect('/login');
 });
 
+
 Auth::routes(['verify' => true]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/video/upload-csv', [App\Http\Controllers\CsvController::class, 'csvUploadVideo'])->name('csvUploadVideo');
+Route::get('/video/upload-csv/save', [App\Http\Controllers\CsvController::class, 'csvUploadVideoPost'])->name('csvUploadVideoPost');
 
 Route::get('home', function () {
     return redirect('/admin/dashboard');

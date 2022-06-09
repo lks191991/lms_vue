@@ -161,7 +161,8 @@ class PageController extends BaseController
 			
 			$review = Rating::where(['course_video_id' => $data['course_id']])->with(['user'])->paginate(2);
 			$returnData['review'] = $review;
-			$returnData['enrolled'] = 500;
+			$userSubscription = UserSubscription::where("course_id",$data['course_id'])->where("status",'Success')->count();
+			$returnData['enrolled'] = $userSubscription;
 			return $this->sendResponse($returnData, 'Course Details');
 		}
        
