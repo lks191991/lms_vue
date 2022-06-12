@@ -10,6 +10,7 @@ use App\Models\SubCategory;
 use App\Models\Slider;
 use App\Models\Course;
 use App\Models\Rating;
+use App\Models\UserSubscription;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ContactInquiry;
 use App\Models\Newsletter;
