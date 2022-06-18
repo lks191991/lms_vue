@@ -175,7 +175,11 @@ class CourseController extends BaseController
 
         return $this->sendResponse($course, 'Course Information has been updated');
     }
-
+    public function show()
+    {
+		
+      
+    }
     public function destroy($id)
     {
 
