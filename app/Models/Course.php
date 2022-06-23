@@ -70,5 +70,12 @@ class Course extends Model
 
         return $query;
     }
+	
+	public function videoWatchReport()
+    {
+        $query = $this->hasMany(VideoWatchReport::class, 'course_id');
+
+        return $query;
+    }
     
 }
