@@ -23,6 +23,11 @@
                          <input type="file" id="uploaded_file_csv" name="uploaded_file_csv">
                         <small class="form-text text-muted">.csv</small>
                     </div>
+
+                    <div class="form-group video_url_section">
+                       
+                         <input type="submit"  name="btnsub" value="Save">
+                    </div>
                 </div>
 				</form>
             </div>

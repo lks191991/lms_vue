@@ -84,7 +84,7 @@
 
                 <form @submit.prevent="editmode ? updateCourse() : createCourse()" >
                     <div class="modal-body">
-					 @method('put')
+					 
 					<div class="row">
 					<div class="form-group col-md-4">
 
@@ -134,7 +134,7 @@
                            <div v-if="allerros.price" class="help-block invalid-feedback">{{ allerros.price[0] }}</div>
                         </div>
 						<div class="form-group col-md-3">
-                            <label>Total Length In Minutes</label>
+                            <label>Total Length In Hours</label>
                             <input v-model="form.total_length_minutes" type="text" name="total_length_minutes"
                                 class="form-control" :class="[allerros.total_length_minutes ? 'is-invalid' : '']">
                            <div v-if="allerros.total_length_minutes" class="help-block invalid-feedback">{{ allerros.total_length_minutes[0] }}</div>

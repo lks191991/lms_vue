@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Course;
+use App\Models\Topic;
+use App\Models\Video;
+use Validator;
 
 class CsvController extends Controller
 {
@@ -95,12 +98,16 @@ class CsvController extends Controller
 							$j++;
 							$topicName = str_replace("'", "\'", $importData[0]);
 							$topicName = str_replace('"', "'+String.fromCharCode(34)+'", $importData[0]);
-							$videoDescription = str_replace("'", "\'", $importData[1]);
-							$videoDescription = str_replace('"', "'+String.fromCharCode(34)+'", $importData[1]);
+							$videoTitle = str_replace("'", "\'", $importData[1]);
+							$videoTitle = str_replace('"', "'+String.fromCharCode(34)+'", $importData[1]);
 							
+							$videoDescription = str_replace("'", "\'", $importData[2]);
+							$videoDescription = str_replace('"', "'+String.fromCharCode(34)+'", $importData[2]);
+
 							$topicName = addslashes(trim(ucwords(strtolower($topicName))));
+							$videoTitle = addslashes(trim(ucwords(strtolower($videoTitle))));
 							$videoDescription = addslashes(trim(ucwords(strtolower($videoDescription))));
-							$topicData = Topic::where("topic_name",$topicName)->where("subject_id",$request->subject)->first();
+							$topicData = Topic::where("name",$topicName)->where("course_id",$request->course)->first();
 							if(isset($topicData))
 							{
 								$toipic_id= $topicData->id;
@@ -108,15 +115,16 @@ class CsvController extends Controller
 							else
 							{
 							$topic = new Topic();
-							$topic->subject_id = $request->subject;
-							$topic->topic_name = $topicName;
-							$topic->status = 0;
+							$topic->course_id = $request->course;
+							$topic->name = $topicName;
+							$topic->status = 1;
 							$topic->save();
 							$toipic_id= $topic->id;
 							}
 							$video = new Video();
 							$video->course_id = $request->course;
-							$video->video_url = trim($importData[2]);
+							$video->video_url = trim($importData[3]);
+							$video->name = $videoTitle;
 							$video->description = $videoDescription;
 							$video->topic_id = $toipic_id;
 							$video->user_id = 1;

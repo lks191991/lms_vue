@@ -44,7 +44,7 @@
 					  <td>{{video.user.name}}</td>
 					  <td>{{video.description | truncate(30, '...')}}</td>
                      
-                      <td><a :href="video.video_note" @click.prevent="downloadItem(video)" v-if="video.video_note!=''" > <i class="fa fa-download blue"></i> </a></td>
+                      <td><a :href="video.video_note" @click.prevent="downloadItem(video)" > <i class="fa fa-download blue" v-if="video_note!=null" ></i> </a></td>
 					  <td :inner-html.prop="video.status | yesno"></td>
                       <td>
                         
