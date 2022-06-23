@@ -234,7 +234,11 @@ class ProfileController extends BaseController
 		else
 		{	
 			
-			$course = Course::where(['id' => $data['course_id']])->withCount(['total_lesson','courseRating'])->withAvg('courseRating', 'rating')->with(['tutor','topics','topics.topicVideos'])->first(); 
+			$course = Course::where(['id' => $data['course_id']])->withCount(['total_lesson','courseRating'])->withAvg('courseRating', 'rating')->with(['tutor','topics','topics.topicVideos','topics.videoWatchReport'])->whereHas('topics.videoWatchReport', function($q)
+{
+    $q->where('user_id','=', Auth::guard('api')->user()->id);
+
+})->first(); 
 			$returnData['course'] = $course;
 			
 			
@@ -393,6 +397,7 @@ class ProfileController extends BaseController
                 $video->duration = $input['duration'];
                 $video->percent = $input['percent'];
                 $video->seconds = $input['seconds'];
+				$video->save();
             }
 
 			return $this->sendResponse($video, 'videos time update.');
@@ -411,16 +416,20 @@ class ProfileController extends BaseController
 
     }
 	
-	/* public function myCompletedCourses(Request $request)
+	public function myCompletedCourses(Request $request)
     {
 		$data = $request->all();
 		$user = Auth::user();
 		$currentDate = Carbon::now()->format('Y-m-d');
-		$userSubscription = UserSubscription::with('course')->where("user_id",Auth::guard('api')->user()->id)->where("expired_on",">=",$currentDate)->where("status",'Success')->paginate(10);
+		$userSubscription = UserSubscription::select("course_id")->where("user_id",Auth::guard('api')->user()->id)->where("expired_on",">=",$currentDate)->where("status",'Success')->get();
+		foreach($userSubscription as $us)
+		{
+			$video = VideoWatchReport::where("user_id",Auth::guard('api')->user()->id)->where("course_id",$us['course_id'])->pluck('column')->avg();
+		}
 
 		return $this->sendResponse($userSubscription, 'my Courses list.');
 
-	} */
+	}
     
 	
 	

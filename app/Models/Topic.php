@@ -36,6 +36,13 @@ class Topic extends Model
      return $this->hasMany(Video::class, 'topic_id');
 	}
 	
+	
+	public function videoWatchReport()
+    {
+        $query = $this->hasMany(VideoWatchReport::class, 'course_id');
+
+        return $query;
+    }
 	/* public function videos()
     {
 
