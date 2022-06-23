@@ -233,13 +233,13 @@ class ProfileController extends BaseController
 		}
 		else
 		{	
-			$course = Course::where(['id' => $data['course_id']])->withCount(['total_lesson','courseRating'])->withAvg('courseRating', 'rating')->with(['tutor','topics','topics.topicVideos','videoWatchReport'])->first();
+			//$course = Course::where(['id' => $data['course_id']])->withCount(['total_lesson','courseRating'])->withAvg('courseRating', 'rating')->with(['tutor','topics','topics.topicVideos','videoWatchReport'])->first();
 			
-			/* $course = Course::where(['id' => $data['course_id']])->withCount(['total_lesson','courseRating'])->withAvg('courseRating', 'rating')->with(['tutor','topics','topics.topicVideos','topics.videoWatchReport'])->whereHas('topics.videoWatchReport', function($q)
+			$course = Course::where(['id' => $data['course_id']])->withCount(['total_lesson','courseRating'])->withAvg('courseRating', 'rating')->with(['tutor','topics','topics.topicVideos','videoWatchReport'])->whereHas('videoWatchReport', function($q)
 {
     $q->where('user_id','=', Auth::guard('api')->user()->id);
 
-})->first();  */
+})->first(); 
 			$returnData['course'] = $course;
 			
 			
