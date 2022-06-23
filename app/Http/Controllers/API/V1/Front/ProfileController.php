@@ -416,7 +416,7 @@ class ProfileController extends BaseController
 
     }
 	
-	public function myCompletedCourses(Request $request)
+	/* public function myCompletedCourses(Request $request)
     {
 		$data = $request->all();
 		$user = Auth::user();
@@ -429,7 +429,7 @@ class ProfileController extends BaseController
 
 		return $this->sendResponse($userSubscription, 'my Courses list.');
 
-	}
+	} */
     
 	
 	
