@@ -334,6 +334,7 @@ class ProfileController extends BaseController
 			
 			$returnData['flag'] = 0;
 			$returnData['favourite'] = 0;
+			$returnData['video_watch_report'] = [];
 			
 			$flag = StudentFlag::where("video_id",$data["video_id"])->where("user_id",Auth::guard('api')->user()->id)->first();
 			$favourite = StudentFavourites::where("video_id",$data["video_id"])->where("user_id",Auth::guard('api')->user()->id)->first();
@@ -346,9 +347,15 @@ class ProfileController extends BaseController
 				{
 					$returnData['favourite'] = 1;
 				}
-
+				
+				$video = VideoWatchReport::where("user_id",Auth::guard('api')->user()->id)->where("video_id",$data['video_id'])->first();
 			
-			return $this->sendResponse($returnData, 'flag  favourite Details');
+				if(isset($video))
+				{
+				$returnData['video_watch_report'] = $video;
+				}
+				
+			return $this->sendResponse($returnData, 'flag, VideoWatchReport,  favourite Details');
 		}
        
 
@@ -403,6 +410,17 @@ class ProfileController extends BaseController
        
 
     }
+	
+	/* public function myCompletedCourses(Request $request)
+    {
+		$data = $request->all();
+		$user = Auth::user();
+		$currentDate = Carbon::now()->format('Y-m-d');
+		$userSubscription = UserSubscription::with('course')->where("user_id",Auth::guard('api')->user()->id)->where("expired_on",">=",$currentDate)->where("status",'Success')->paginate(10);
+
+		return $this->sendResponse($userSubscription, 'my Courses list.');
+
+	} */
     
 	
 	
