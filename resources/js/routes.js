@@ -22,11 +22,21 @@ export default [
 
     { path: '/admin/coupons', component: require('./components/admin/Coupon.vue').default },
     //{ path: '/admin/products', component: require('./components/product/Products.vue').default },
+    
    
    //Quiz manager routes
    { path: '/admin/quiz_manager', component: require('./components/admin/quiz_manager/QnsAns.vue').default },
-  
 
+   // Report
+   { path: '/admin/transactions', component: require('./components/admin/users/Transactions.vue').default },
+   { path: '/admin/user-last-login', component: require('./components/admin/users/Lastlogin.vue').default },
+   { path: '/admin/course-watch-hours', component: require('./components/admin/course_manager/TotalWatchHours.vue').default },
+
+   { path: '/admin/course-complete-student', component: require('./components/admin/users/CourseCompleteStudent.vue').default },
+//Visitor manager routes
+{ path: '/admin/newsletters', component: require('./components/admin/visitors/subscriptions.vue').default },
+{ path: '/admin/course-review', component: require('./components/admin/visitors/CourseReview.vue').default },
+{ path: '/admin/video-review', component: require('./components/admin/visitors/VideoReview.vue').default },
     //users settings
     { path: '/admin/pages', component: require('./components/admin/settings/Page.vue').default },
     { path: '/admin/sliders', component: require('./components/admin/settings/Slider.vue').default },

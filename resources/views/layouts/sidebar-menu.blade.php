@@ -92,7 +92,14 @@
               </p>
             </router-link>
           </li>
-          
+          <li class="nav-item">
+            <router-link to="/admin/transactions" class="nav-link">
+              <i class="nav-icon fas fa-list-ol green"></i>
+              <p>
+              Transactions
+              </p>
+            </router-link>
+          </li>
         </ul>
       </li>
 
@@ -130,8 +137,92 @@
           
         </ul>
       </li>
-
       
+      <li class="nav-item has-treeview">
+        <a href="#" class="nav-link">
+          <i class="nav-icon fas fa-list blue"></i>
+          <p>
+          Visitor
+            <i class="right fas fa-angle-left"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+
+         
+          <li class="nav-item">
+            <router-link to="/admin/newsletters" class="nav-link">
+              <i class="nav-icon fa fa-list green"></i>
+              <p>
+              Newsletters
+              </p>
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/admin/course-review" class="nav-link">
+              <i class="nav-icon fa fa-list green"></i>
+              <p>
+              Course Review
+              </p>
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/admin/video-review" class="nav-link">
+              <i class="nav-icon fa fa-list green"></i>
+              <p>
+              Video Review
+              </p>
+            </router-link>
+          </li>
+        </ul>
+      </li>
+      @can('isAdmin')
+      <li class="nav-item has-treeview">
+        <a href="#" class="nav-link">
+        <i class="fa fa-file nav-icon blue"></i>
+          <p> 
+          Repotrs
+          <i class="right fas fa-angle-left"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+
+         
+          <li class="nav-item">
+            <router-link to="/admin/transactions" class="nav-link">
+              <i class="nav-icon fas fa-list-ol green"></i>
+              <p>
+              Transactions
+              </p>
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/admin/user-last-login" class="nav-link">
+              <i class="nav-icon fas fa-list-ol green"></i>
+              <p>
+              Last Login History
+              </p>
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/admin/course-watch-hours" class="nav-link">
+              <i class="nav-icon fas fa-list-ol green"></i>
+              <p>
+              Course Watch Hours
+              </p>
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/admin/course-complete-student" class="nav-link">
+              <i class="nav-icon fas fa-list-ol green"></i>
+              <p>
+              Course Complete %
+              </p>
+            </router-link>
+          </li>
+        </ul>
+      </li>
+
+      @endcan
       <li class="nav-item has-treeview">
         <a href="#" class="nav-link">
           <i class="nav-icon fas fa-cog green"></i>

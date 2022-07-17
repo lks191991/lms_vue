@@ -41,7 +41,7 @@ class UserRequest extends FormRequest
             'type' => 'required|in:admin,user,student',
             'name' => 'required|string|max:191',
             'email' => 'required|string|email|max:191|unique:users',
-            'contact' => 'required|numeric|digits:10|unique:users',
+            'contact' => 'required|numeric|unique:users',
             'password' => 'required|string|min:6'
         ];
     }
@@ -57,7 +57,7 @@ class UserRequest extends FormRequest
             'type' => 'required|in:admin,user,student',
             'name' => 'sometimes|string|max:191',
             'email' => 'sometimes|string|email|max:191|unique:users,email,' . $this->get('id'),
-            'contact' => 'sometimes|numeric|digits:10|unique:users,contact,' . $this->get('id')
+            'contact' => 'sometimes|numeric|unique:users,contact,' . $this->get('id')
         ];
     }
 }

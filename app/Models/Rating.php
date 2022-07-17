@@ -20,6 +20,7 @@ class Rating extends Model
 	protected $casts = [
         'status' => 'boolean',
     ];
+    
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -29,7 +30,11 @@ class Rating extends Model
     {
         return $this->belongsTo(Course::class,'course_video_id');
     }
-	
+
+	public function video()
+    {
+        return $this->belongsTo(Video::class,'course_video_id');
+    }
 	
     
 }

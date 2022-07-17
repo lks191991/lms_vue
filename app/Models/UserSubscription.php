@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Emadadly\LaravelUuid\Uuids;
 use App\Models\Course;
-use App\User;
+use App\Models\User;
 
 class UserSubscription extends Model
 {

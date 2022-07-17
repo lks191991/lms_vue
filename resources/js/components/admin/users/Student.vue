@@ -123,7 +123,11 @@
                             <toggle-button  :value="form.status"  :sync="true" v-model="form.status" :labels="{checked: 'Yes', unchecked: 'No'}"  />
 							
                         </div>
-                        
+                        <div class="form-group">
+                            <label>Email Verified</label>
+                            <toggle-button  :value="form.email_verified_at"  :sync="true" v-model="form.email_verified_at" :labels="{checked: 'Yes', unchecked: 'No'}"  />
+							
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -158,7 +162,7 @@ import Datepicker from 'vuejs-datepicker'
                     email: '',
                     password: '',
                     status: false,
-                    email_verified_at: '',
+                    email_verified_at: null,
                 })
             }
         },
@@ -204,6 +208,14 @@ import Datepicker from 'vuejs-datepicker'
 				else
 				{
 				user.status = false;
+				}
+                if(user.email_verified_at==null)
+				{
+				user.email_verified_at = false;
+				}
+				else
+				{
+				user.email_verified_at = true;
 				}
                  //console.log(this.form.status);
                   this.form.fill(user);

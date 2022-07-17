@@ -74,6 +74,7 @@ Route::namespace('App\\Http\\Controllers\\API\V1\Front')->group(function () {
 
 Route::namespace('App\\Http\\Controllers\\API\V1')->group(function () {
 	
+	Route::get('dashboard', 'UserController@dashboard');
 	Route::get('get-category', 'CommonController@getCategorySelect');
 	Route::get('sub-category/bycategory', 'CommonController@getSubCategorySelect');
 	Route::get('course/bycategoryorsub', 'CommonController@getCoursesSelect');
@@ -92,10 +93,19 @@ Route::namespace('App\\Http\\Controllers\\API\V1')->group(function () {
     Route::post('sliders/update', 'SliderController@update');
     Route::post('course/update', 'CourseController@update');
     Route::get('students', 'UserController@students');
+	Route::get('user-last-login', 'UserController@studentsLastLogin');
     Route::get('tutors', 'UserController@tutors');
     Route::get('settings', 'SettingController@index');
     Route::post('settings', 'SettingController@store');
-
+	Route::get('newsletters', 'VisitorController@newsletters');
+	Route::get('newsletters/{id}', 'VisitorController@deleteNewsletter');
+	Route::get('transactions', 'UserController@transactions');
+	Route::get('course-review', 'VisitorController@courseReview');
+	Route::get('video-review', 'VisitorController@videoReview');
+	Route::post('update-review-status', 'VisitorController@statusUpdateReview');
+	Route::post('review-delete', 'VisitorController@deleteReview');
+	Route::get('course-watch-hours', 'VisitorController@courseWatchHours');
+	Route::get('course-complete-student', 'VisitorController@courseCompleteStudent');
     Route::apiResources([
         '/user' => 'UserController',
         'product' => 'ProductController',

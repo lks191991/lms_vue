@@ -243,7 +243,7 @@ class ProfileController extends BaseController
 			$returnData['course'] = $course;
 			
 			
-			$review = Rating::where(['course_video_id' => $data['course_id']])->with(['user'])->paginate(2);
+			$review = Rating::where(['course_video_id' => $data['course_id'],'status' => 1])->with(['user'])->paginate(5);
             
 			$returnData['review'] = $review;
 			$enrolled = UserSubscription::where("course_id",$data['course_id'])->count();

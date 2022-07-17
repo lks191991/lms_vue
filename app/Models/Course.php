@@ -59,14 +59,14 @@ class Course extends Model
 	
 	public function courseRating()
     {
-        $query = $this->hasMany(Rating::class, 'course_video_id')->where('type','=', 'course');
+        $query = $this->hasMany(Rating::class, 'course_video_id')->where('type','=', 'course')->where('status','=', 1);
 
         return $query;
     }
 	
 	public function videoRating()
     {
-        $query = $this->hasMany(Rating::class, 'course_video_id')->where('type','=', 'video');
+        $query = $this->hasMany(Rating::class, 'course_video_id')->where('type','=', 'video')->where('status','=', 1);
 
         return $query;
     }
@@ -78,4 +78,10 @@ class Course extends Model
         return $query;
     }
     
+    public function videobyCourse()
+    {
+        $query = $this->belongsTo(Video::class, 'course_id');
+
+        return $query;
+    }
 }

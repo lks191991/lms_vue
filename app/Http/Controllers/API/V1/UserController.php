@@ -4,6 +4,13 @@ namespace App\Http\Controllers\API\V1;
 
 use App\Http\Requests\Users\UserRequest;
 use App\Models\User;
+use App\Models\Course;
+use App\Models\Topic;
+use App\Models\Video;
+use App\Models\SubCategory;
+use App\Models\UserSubscription;
+use App\Models\Newsletter;
+use App\Models\Rating;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Gate;
 use Carbon\Carbon;
@@ -18,6 +25,35 @@ class UserController extends BaseController
     public function __construct()
     {
         $this->middleware('auth:api');
+    }
+
+    public function dashboard()
+    {
+        if (!Gate::allows('isAdmin')) {
+            return $this->unauthorizedResponse();
+        }
+        // $this->authorize('isAdmin');
+
+        $students = User::where("type",'student')->count();
+        $tutors = User::where("type",'user')->count();
+        $SubCategory = SubCategory::count();
+        $courses = Course::count();
+        $topics = Topic::count();
+        $videos = Video::count();
+        $paymentsSuccess = UserSubscription::where("status","Success")->sum("price");
+        $paymentsFailed = UserSubscription::where("status","Failed")->sum("price");
+        $data = [
+            'students' =>$students,
+            'tutors' =>$tutors,
+            'courses' =>$courses,
+            'topics' =>$topics,
+            'videos' =>$videos,
+            'paymentsSuccess' =>$paymentsSuccess,
+            'paymentsFailed' =>$paymentsFailed,
+            'SubCategory' =>$SubCategory,
+            'transactions' =>$paymentsSuccess+$paymentsFailed,
+        ];
+        return $this->sendResponse($data, 'dashboard data');
     }
 
     /**
@@ -55,6 +91,23 @@ class UserController extends BaseController
         return $this->sendResponse($users, 'Users list');
     }
 
+     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function studentsLastLogin()
+    {
+      
+        if (!Gate::allows('isAdmin')) {
+            return $this->unauthorizedResponse();
+        }
+        // $this->authorize('isAdmin');
+
+        $users = User::where("type",'student')->where("last_login",'!=',NULL)->latest()->paginate(10);
+
+        return $this->sendResponse($users, 'Users list');
+    }
     public function tutors()
     {
        
@@ -116,9 +169,18 @@ class UserController extends BaseController
             $request->merge(['dob' => date("Y-m-d",strtotime($request['dob']))]);
         }
         
-       
+        $userData = [
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => Hash::make($request['password']),
+            'type' => $request['type'],
+            'contact' => $request['contact'],
+            'dob' => date("Y-m-d",strtotime($request['dob'])),
+            'email_verified_at' =>  Carbon::now(),
+            'status' => ($request->get('status') !== null)? $request->get('status'):0,
+        ];
 
-        $user->update($request->all());
+        $user->update($userData);
 
         return $this->sendResponse($user, 'User Information has been updated');
     }
@@ -141,4 +203,23 @@ class UserController extends BaseController
 
         return $this->sendResponse([$user], 'User has been Deleted');
     }
+
+   
+
+    public function transactions()
+    {
+       
+        if (!Gate::allows('isAdmin')) {
+            return $this->unauthorizedResponse();
+        }
+        // $this->authorize('isAdmin');
+
+        $users = UserSubscription::with(["course","user"])->latest()->paginate(10);
+
+        return $this->sendResponse($users, 'User Subscription list');
+    }
+
+   
+
+    
 }

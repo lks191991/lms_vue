@@ -25,7 +25,7 @@
     </ul>
 
     <!-- SEARCH FORM -->
-    <form class="form-inline ml-3">
+    <form class="form-inline ml-3" style="display:none">
       <div class="input-group input-group-sm">
         <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
         <div class="input-group-append">
@@ -42,8 +42,8 @@
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <router-link to="/dashboard" class="brand-link">
-      <img src="{{ asset('/images/logo-admin.png') }}" alt="The Logo" class="brand-image img-circle elevation-3"
+    <router-link to="/admin/dashboard" class="brand-link">
+      <img src="{{ asset('/images/logo-admin.png') }}"  alt="The Logo" class="brand-image img-circle elevation-3"
            style="opacity: .8">
       <span class="brand-text font-weight-light">{{ config('app.name', 'Laravel') }}</span>
     </router-link>
@@ -51,10 +51,10 @@
     <!-- Sidebar -->
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
-        <router-link to="/profile">
+        <router-link to="/admin/dashboard">
           <div class="user-panel mt-3 pb-3 mb-3 d-flex">
               <div class="image">
-                <img src="{{ auth()->user()->photo }}" class="img-circle elevation-2" alt="User Image">
+                <img src="{{ auth()->user()->photo }}" style="display:none" class="img-circle elevation-2" alt="User Image">
               </div>
               <div class="info">
 
@@ -108,10 +108,10 @@
   <footer class="main-footer">
     {{-- To the right --}}
     <div class="float-right d-none d-sm-block">
-      <b>Version</b> 3.0.0
+      
     </div>
     {{-- Default to the left --}}
-    <strong>Copyright &copy; 2014-2019 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+    <strong>Copyright &copy; 2014-2019 <a href="#">Bright Horizon</a>.</strong> All rights reserved.
   </footer>
 </div>
 {{-- ./wrapper --}}
