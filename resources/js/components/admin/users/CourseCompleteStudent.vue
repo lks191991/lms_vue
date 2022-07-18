@@ -28,10 +28,10 @@
                   </thead>
                   <tbody>
                      <tr v-for="payment in payments.data" :key="payment.id">
-                      <td>{{payment.user.name}}</td>
-                      <td>{{payment.user.email}}</td>
-                      <td>{{payment.course.name}}</td>
-                      <td>{{payment.course.name}}</td>
+                      <td>{{payment.uname}}</td>
+                      <td>{{payment.uemail}}</td>
+                      <td>{{payment.cname}}</td>
+                      <td>{{payment.p}}%</td>
                     </tr>
                   </tbody>
                 </table>

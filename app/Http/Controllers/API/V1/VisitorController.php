@@ -139,17 +139,20 @@ class VisitorController extends BaseController
 
         //$users = DB::table('video_watch_report')->groupBy('video_watch_report.user_id')->get();
         //$users = VideoWatchReport::with(["course","user"])->groupBy('user_id')->get();
-        $sql = "select vw.*,c.name ascname,u.name,AVG(percent) as p from video_watch_report as vw left join users as u ON(u.id=vw.user_id) left join courses c ON(vw.course_id=c.id) group by u.name";
-        $users = DB::select($sql);
-    //     $users = DB::table('video_watch_report')
-    // ->leftjoin('users as u','u.id','=','video_watch_report.user_id')
-    // ->leftjoin('courses as c','video_watch_report.course_id','=','c.id')
-    // ->selectRaw('video_watch_report.*')
-    // ->selectRaw('c.name as cname')
-    // ->selectRaw('u.name')
-    // //->selectRaw('AVG(percent) as p')
-    // //->groupBy('video_watch_report.user_id')
-    // ->get();
+        //$sql = "select vw.*,c.name ascname,u.name,AVG(percent) as p from video_watch_report as vw left join users as u ON(u.id=vw.user_id) left join courses c ON(vw.course_id=c.id) group by u.name;";
+        //$users = DB::statement($sql);
+        $users = DB::table('video_watch_report')
+    ->leftjoin('users as u','u.id','=','video_watch_report.user_id')
+    ->leftjoin('courses as c','video_watch_report.course_id','=','c.id')
+    ->selectRaw('video_watch_report.*')
+    ->selectRaw('video_watch_report.user_id as uid')
+    ->selectRaw('c.name as cname')
+    ->selectRaw('u.name as uname')
+    ->selectRaw('u.email as uemail')
+    ->selectRaw('AVG(percent) as p')
+    ->groupBy('cname')
+    ->groupBy('uname')
+    ->paginate(50);
 
         return $this->sendResponse($users, 'User VideoWatchReport list');
     }
