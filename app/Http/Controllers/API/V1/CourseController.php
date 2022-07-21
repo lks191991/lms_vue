@@ -32,9 +32,19 @@ class CourseController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $courses = $this->course->latest()->with('category','subcategory')->paginate(10);
+		$data = $request->all();
+		$query = $this->course->latest()->with('category','subcategory');
+		if(isset($data['c_name']) && !empty($data['c_name']))
+        {
+            $query->where('name','like', '%'.$data['c_name'].'%');
+        }
+		if(isset($data['c_cat']) && !empty($data['c_cat']))
+        {
+            $query->where('sub_category_id', $data['c_cat']);
+        }
+        $courses = $query->orderBy('name', 'ASC')->paginate(50);
 
         return $this->sendResponse($courses, 'Courses list');
     }

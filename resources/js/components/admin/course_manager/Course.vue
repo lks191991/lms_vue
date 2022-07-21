@@ -22,7 +22,7 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body table-responsive p-0">
-                <table class="table table-hover">
+                <table class="table table-bordered table-striped">
                   <thead>
                     <tr>
                       <th>Name</th>
@@ -34,6 +34,23 @@
 					  <th>Status</th>
 					   <th>Image</th>
                       <th>Action</th>
+                    </tr>
+                    <tr>
+                      <th><input v-model="c_name" type="text" name="name" class="form-control" ></th>
+                      <th></th>
+                      <th></th>
+					  <th><select class="form-control" v-model="c_cat" >
+                             <option value="" >Select</option>
+								  <option  
+                                  v-for="(cat,index) in subcategories_seacrh" :key="index"
+                                  :value="index"
+                                  :selected="index == form.sub_category_id">{{ cat }}</option>
+                            </select></th>
+                      <th></th>
+					  <th></th>
+					  <th></th>
+					   <th></th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -198,6 +215,8 @@
                 editmode: false,
                 products : {},
 				loading: false,
+                c_name: '',
+                c_cat: '',
                 editProduct : [],
                 form: new Form({
                     id : '',
@@ -216,6 +235,7 @@
 				allerros: [],
                 categories: [],
 				subcategories: [],
+                subcategories_seacrh: [],
                 imagePreview: null,
 				showPreview: false,
 				 imageEditPreview: null,
@@ -268,22 +288,20 @@
 			this.loading = true
               this.$Progress.start();
               
-              axios.get('api/course?page=' + page).then(({ data }) => (this.products = data.data));
+              axios.get('/api/course?page=' + page,{ params: {c_name: this.c_name,c_cat: this.c_cat} }).then(({ data }) => (this.products = data.data));
 				this.loading = false
               this.$Progress.finish();
           },
          
-		   loadProducts(){
-				this.loading = true
-                if(this.$gate.isAdmin()){
-                    axios.get("/api/course").then(({ data }) => {this.products = data.data;
-					this.loading = false
-					});
-                }
-            },
           loadCategories(){
 
               axios.get("/api/category/list").then(({ data }) => (this.categories = data.data));
+          },
+          loadsubcatForSeacrh(){
+				return axios.get("/api/sub-category/bycategory", {
+				}).then(({ data }) => {
+				this.subcategories_seacrh = data.data
+				});
           },
 		  loadSubCategories(id){
 			  this.form.sub_category_id = '';
@@ -362,7 +380,7 @@
                         title: data.data.message
                     });
                   this.$Progress.finish();
-                  this.loadProducts();
+                  this.getResults();
 
                 } else {
 					this.allerros = error.response.data.errors;
@@ -405,7 +423,7 @@
                   this.$Progress.finish();
                       //  Fire.$emit('AfterCreate');
 					
-                  this.loadProducts();
+                  this.getResults();
               })
               .catch((error) => {
 				  this.allerros = error.response.data.errors;
@@ -436,7 +454,7 @@
                                       'success'
                                       );
                                   // Fire.$emit('AfterCreate');
-                                  this.loadProducts();
+                                  this.getResults();
                               }).catch((data)=> {
                                   Swal.fire("Failed!", data.message, "warning");
                               });
@@ -446,15 +464,25 @@
 
         },
         mounted() {
+             this.getResults();
         },
         created() {
             this.$Progress.start();
 
-            this.loadProducts();
+            this.getResults();
             this.loadCategories();
+            this.loadsubcatForSeacrh();
             this.$Progress.finish();
 			
         },
+    watch: {
+        c_name(after, before) {
+            this.getResults();
+        },
+        c_cat(after, before) {
+            this.getResults();
+        }
+    },
         filters: {
             truncate: function (text, length, suffix) {
                 return ''//text.substring(0, length) + suffix;

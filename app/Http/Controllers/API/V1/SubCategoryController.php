@@ -29,9 +29,16 @@ class SubCategoryController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = $this->subCategory->latest()->with('category')->paginate(10);
+		$data = $request->all();
+		$query = $this->subCategory->latest()->with('category');
+		if(isset($data['keywords']) && !empty($data['keywords']))
+        {
+            $query->where('name','like', '%'.$data['keywords'].'%');
+        }
+		$categories = $query->orderBy('name', 'ASC')->paginate(50);
+		
 
         return $this->sendResponse($categories, 'Category list');
     }

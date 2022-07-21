@@ -25,7 +25,7 @@
               <!-- /.card-header -->
               <div class="card-body table-responsive p-0">
 			 
-                <table class="table table-hover">
+                <table class="table table-bordered table-striped">
                   <thead>
                     <tr>
                       <th>ID</th>
@@ -34,6 +34,14 @@
                       <th>Description</th>
                       <th>Created</th>
                       <th>Action</th>
+                    </tr>
+                     <tr>
+                      <th></th>
+                      <th><input v-model="keywords" type="text" name="name" class="form-control" ></th>
+					  <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -60,7 +68,7 @@
               </div>
               <!-- /.card-body -->
               <div class="card-footer">
-                  <pagination :data="categories" @pagination-change-page="getResults"></pagination>
+                  <pagination :data="categories" :limit="1" @pagination-change-page="getResults"></pagination>
               </div>
             </div>
             <!-- /.card -->
@@ -128,12 +136,14 @@
 
 <script>
     export default {
-		
+	
         data () {
             return {
                 editmode: false,
 				loading: false,
                 categories : {},
+                keywords:'',
+                
                 form: new Form({
                     id : '',
                     name: '',
@@ -146,10 +156,15 @@
         methods: {
 
             getResults(page = 1) {
-				this.loading = true
+                
+                if(this.keywords=='')
+                {
+                    this.loading = true
+                }
+				
                   this.$Progress.start();
                   
-                  axios.get('/api/subcategory?page=' + page).then(({ data }) => {this.categories = data.data;
+                  axios.get('/api/subcategory?page=' + page, { params: {keywords: this.keywords} }).then(({ data }) => {this.categories = data.data;
 				  this.loading = false
 				  });
 
@@ -171,7 +186,7 @@
                     this.$Progress.finish();
                         //  Fire.$emit('AfterCreate');
 
-                    this.loadCategories();
+                    this.getResults();
                 })
                 .catch(() => {
                     this.$Progress.fail();
@@ -239,7 +254,7 @@
                                       'success'
                                       );
                                   // Fire.$emit('AfterCreate');
-                                  this.loadCategories();
+                                  this.getResults();
                               }).catch((data)=> {
                                   Swal.fire("Failed!", data.message, "warning");
                               });
@@ -249,12 +264,18 @@
 
         },
         mounted() {
-            console.log('Component mounted.')
+            this.getResults();
         },
+       
+    watch: {
+        keywords(after, before) {
+            this.getResults();
+        }
+    } ,
         created() {
 
             this.$Progress.start();
-            this.loadCategories();
+            this.getResults();
             this.$Progress.finish();
 			 this.loadPCategories();
         }
