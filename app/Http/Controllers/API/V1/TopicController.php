@@ -29,9 +29,20 @@ class TopicController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $topics = $this->topic->latest()->with('course')->paginate(10);
+		$data = $request->all();
+		$query = $this->topic->latest()->with('course');
+		if(isset($data['t_name']) && !empty($data['t_name']))
+        {
+            $query->where('name','like', '%'.$data['t_name'].'%');
+        }
+		if(isset($data['c_name']) && !empty($data['c_name']))
+        {
+            $query->where('course_id', $data['c_name']);
+        }
+        $topics = $query->orderBy('name', 'ASC')->paginate(50);
+		
 
         return $this->sendResponse($topics, 'Topic list');
     }

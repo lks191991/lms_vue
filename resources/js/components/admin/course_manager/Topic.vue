@@ -26,7 +26,7 @@
               <!-- /.card-header -->
               <div class="card-body table-responsive p-0">
 			 
-                <table class="table table-hover">
+                <table class="table table-bordered table-striped">
                   <thead>
                     <tr>
                       <th>Name</th>
@@ -35,6 +35,19 @@
                       <th>Created</th>
 					  <th>Status</th>
                       <th>Action</th>
+                    </tr>
+                     <tr>
+                      <th><input v-model="t_name" type="text" name="name" class="form-control" ></th>
+					  <th><select class="form-control" v-model="c_name" >
+                             <option value="" >Select</option>
+								  <option  
+                                  v-for="(cat,index) in courses" :key="index"
+                                  :value="index" >{{ cat }}</option>
+                            </select></th>
+                      <th></th>
+                      <th></th>
+					  <th></th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -141,6 +154,8 @@
                 editmode: false,
 				loading: false,
                 listData : {},
+                 t_name: '',
+                c_name: '',
                 form: new Form({
                     id : '',
                     name: '',
@@ -157,19 +172,11 @@
 				this.loading = true
                   this.$Progress.start();
                   
-                  axios.get('//api/topic?page=' + page).then(({ data }) => {this.listData = data.data;
+                  axios.get('//api/topic?page=' + page,{ params: {t_name: this.t_name,c_name: this.c_name}}).then(({ data }) => {this.listData = data.data;
 				  this.loading = false
 				  });
 
                   this.$Progress.finish();
-            },
-			 loadData(){
-				this.loading = true
-                if(this.$gate.isAdmin()){
-                    axios.get("/api/topic").then(({ data }) => {this.listData = data.data;
-					this.loading = false
-					});
-                }
             },
 			
 			 courseList(){
@@ -188,7 +195,7 @@
                     this.$Progress.finish();
                         //  Fire.$emit('AfterCreate');
 
-                    this.loadData();
+                    this.getResults();
                 })
                 .catch(() => {
                     this.$Progress.fail();
@@ -228,7 +235,7 @@
                     });
 
                     this.$Progress.finish();
-                    this.loadData();
+                    this.getResults();
                 })
                 .catch(()=>{
                     Toast.fire({
@@ -256,7 +263,7 @@
                                       'success'
                                       );
                                   // Fire.$emit('AfterCreate');
-                                  this.loadData();
+                                  this.getResults();
                               }).catch((data)=> {
                                   Swal.fire("Failed!", data.message, "warning");
                               });
@@ -266,10 +273,18 @@
 
         },
         mounted() {
-            console.log('Component mounted.')
+            this.getResults();
         },
+    watch: {
+        t_name(after, before) {
+            this.getResults();
+        },
+        c_name(after, before) {
+            this.getResults();
+        }
+    },
         created() {
-			this.loadData();
+			this.getResults();
             this.$Progress.start();
             this.courseList();
             this.$Progress.finish();
