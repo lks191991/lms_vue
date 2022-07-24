@@ -41,7 +41,8 @@ class TopicController extends BaseController
         {
             $query->where('course_id', $data['c_name']);
         }
-        $topics = $query->orderBy('name', 'ASC')->paginate(50);
+
+        $topics = $query->paginate(50);
 		
 
         return $this->sendResponse($topics, 'Topic list');

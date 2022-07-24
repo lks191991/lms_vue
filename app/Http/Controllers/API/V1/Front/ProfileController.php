@@ -235,11 +235,9 @@ class ProfileController extends BaseController
 		{	
 			$course = Course::where(['id' => $data['course_id']])->withCount(['total_lesson','courseRating'])->withAvg('courseRating', 'rating')->with(['tutor','topics','topics.topicVideos','videoWatchReport'])->first();
 			
-			/* $course = Course::where(['id' => $data['course_id']])->withCount(['total_lesson','courseRating'])->withAvg('courseRating', 'rating')->with(['tutor','topics','topics.topicVideos','videoWatchReport'])->whereHas('videoWatchReport', function($q)
-{
-    $q->where('user_id','=', Auth::guard('api')->user()->id);
-
-})->first();  */
+			$videos = Video::where("course_id",$data['course_id'])->count();
+			$course->total_video_sum = $videos;
+			$course->save();
 			$returnData['course'] = $course;
 			
 			

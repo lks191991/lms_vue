@@ -31,10 +31,24 @@ class VideoController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $videos = $this->video->with('course','topic','user')->latest()->paginate(10);
+        $data = $request->all();
+		$query = $this->video->latest()->with('course','topic','user');
+		if(isset($data['v_name']) && !empty($data['v_name']))
+        {
+            $query->where('name','like', '%'.$data['v_name'].'%');
+        }
+		if(isset($data['c_id']) && !empty($data['c_id']))
+        {
+            $query->where('course_id', $data['c_id']);
+        }
+        if(isset($data['t_id']) && !empty($data['t_id']))
+        {
+            $query->where('topic_id', $data['t_id']);
+        }
 
+        $videos = $query->paginate(50);
         return $this->sendResponse($videos, 'videos list');
     }
 

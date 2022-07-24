@@ -172,7 +172,7 @@
 				this.loading = true
                   this.$Progress.start();
                   
-                  axios.get('//api/topic?page=' + page,{ params: {t_name: this.t_name,c_name: this.c_name}}).then(({ data }) => {this.listData = data.data;
+                  axios.get('/api/topic?page=' + page,{ params: {t_name: this.t_name,c_name: this.c_name}}).then(({ data }) => {this.listData = data.data;
 				  this.loading = false
 				  });
 

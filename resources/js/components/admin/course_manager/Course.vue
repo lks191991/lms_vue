@@ -63,7 +63,7 @@
                       <td>{{product.price}}</td>
 					   <td>{{product.total_length_minutes}}</td>
 					   <td :inner-html.prop="product.status | yesno"></td>
-                      <td><img v-bind:src="'/' + product.banner_image" v-if="product.banner_image" width="100" alt="product"></td>
+                      <td><img v-bind:src="'/' + product.banner_image" v-if="product.banner_image" width="100" height="100" alt="product"></td>
                       <td>
                         
                         <a href="javascript:;" @click="editModal(product)">

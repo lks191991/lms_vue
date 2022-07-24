@@ -55,27 +55,54 @@ class VisitorController extends BaseController
         return $this->sendResponse($newsletter, 'Newsletter deleted');
     }
 
-    public function courseReview()
+    public function courseReview(Request $request)
     {
        
         if (!Gate::allows('isAdmin')) {
             return $this->unauthorizedResponse();
         }
 
-        $review = Rating::where(['type' => 'course'])->with(['user','course'])->latest()->paginate(5);
+        $data = $request->all();
+        $query = Rating::where(['type' => 'course'])->with(['user','course']);
+		if(isset($data['v_name']) && !empty($data['v_name']))
+        {
+            $query->whereHas('user', function($q) use($data){
+                $q->where('name','like', '%'.$data['v_name'].'%');
+            });
+        }
+		if(isset($data['c_id']) && !empty($data['c_id']))
+        {
+            $query->where('course_video_id', $data['c_id']);
+        }
+       
 
+        $review = $query->paginate(50);
         return $this->sendResponse($review, 'User review list');
     }
 
-    public function videoReview()
+    public function videoReview(Request $request)
     {
        
         if (!Gate::allows('isAdmin')) {
             return $this->unauthorizedResponse();
         }
 
-        $review = Rating::where(['type' => 'video'])->with(['user','video','video.course'])->latest()->paginate(5);
+        $data = $request->all();
+        $query = Rating::where(['type' => 'video'])->with(['user','video','video.course']);
+		if(isset($data['v_name']) && !empty($data['v_name']))
+        {
+            $query->whereHas('user', function($q) use($data){
+                $q->where('name','like', '%'.$data['v_name'].'%');
+            });
+        }
+        if(isset($data['c_id']) && !empty($data['c_id']))
+        {
+            $query->whereHas('video.course', function($q) use($data){
+                $q->where('id', $data['c_id']);
+            });
+        }
 
+        $review = $query->paginate(50);
         return $this->sendResponse($review, 'User review list');
     }
 
@@ -129,30 +156,39 @@ class VisitorController extends BaseController
 
    
 
-    public function courseCompleteStudent()
+    public function courseCompleteStudent(Request $request)
     {
        
         if (!Gate::allows('isAdmin')) {
             return $this->unauthorizedResponse();
         }
-        // $this->authorize('isAdmin');
-
-        //$users = DB::table('video_watch_report')->groupBy('video_watch_report.user_id')->get();
-        //$users = VideoWatchReport::with(["course","user"])->groupBy('user_id')->get();
-        //$sql = "select vw.*,c.name ascname,u.name,AVG(percent) as p from video_watch_report as vw left join users as u ON(u.id=vw.user_id) left join courses c ON(vw.course_id=c.id) group by u.name;";
-        //$users = DB::statement($sql);
-        $users = DB::table('video_watch_report')
+        $data = $request->all();
+		
+        $query = DB::table('video_watch_report')
     ->leftjoin('users as u','u.id','=','video_watch_report.user_id')
     ->leftjoin('courses as c','video_watch_report.course_id','=','c.id')
     ->selectRaw('video_watch_report.*')
     ->selectRaw('video_watch_report.user_id as uid')
     ->selectRaw('c.name as cname')
+    ->selectRaw('c.total_video_sum as total_video_sum')
     ->selectRaw('u.name as uname')
     ->selectRaw('u.email as uemail')
-    ->selectRaw('AVG(percent) as p')
-    ->groupBy('cname')
-    ->groupBy('uname')
-    ->paginate(50);
+    ->selectRaw('COUNT(percent) as p');
+
+        if(isset($data['v_name']) && !empty($data['v_name']))
+        {
+                $query->where('u.name','like', '%'.$data['v_name'].'%');
+        }
+        if(isset($data['v_email']) && !empty($data['v_email']))
+        {
+                $query->where('u.email','like', '%'.$data['v_email'].'%');
+        }
+        if(isset($data['c_id']) && !empty($data['c_id']))
+        {
+        $query->where('video_watch_report.course_id', $data['c_id']);
+        }
+
+        $users = $query->groupBy('cname')->groupBy('uname')->paginate(50);
 
         return $this->sendResponse($users, 'User VideoWatchReport list');
     }

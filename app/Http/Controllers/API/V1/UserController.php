@@ -14,6 +14,7 @@ use App\Models\Rating;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Gate;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class UserController extends BaseController
 {
@@ -78,15 +79,28 @@ class UserController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function students()
+    public function students(Request $request)
     {
       
+       
         if (!Gate::allows('isAdmin')) {
             return $this->unauthorizedResponse();
         }
         // $this->authorize('isAdmin');
 
-        $users = User::where("type",'student')->latest()->paginate(10);
+        $data = $request->all();
+		$query = User::where("type",'student')->latest();
+		if(isset($data['s_name']) && !empty($data['s_name']))
+        {
+            $query->where('name','like', '%'.$data['s_name'].'%');
+        }
+		if(isset($data['s_email']) && !empty($data['s_email']))
+        {
+            $query->where('email','like', '%'.$data['s_email'].'%');
+        }
+
+        $users = $query->paginate(50);
+
 
         return $this->sendResponse($users, 'Users list');
     }
@@ -96,7 +110,7 @@ class UserController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function studentsLastLogin()
+    public function studentsLastLogin(Request $request)
     {
       
         if (!Gate::allows('isAdmin')) {
@@ -104,19 +118,39 @@ class UserController extends BaseController
         }
         // $this->authorize('isAdmin');
 
-        $users = User::where("type",'student')->where("last_login",'!=',NULL)->latest()->paginate(10);
+        $data = $request->all();
+		$query = User::where("type",'student')->where("last_login",'!=',NULL)->latest();
+		if(isset($data['v_name']) && !empty($data['v_name']))
+        {
+            $query->where('name','like', '%'.$data['v_name'].'%');
+        }
+		if(isset($data['v_email']) && !empty($data['v_email']))
+        {
+            $query->where('email','like', '%'.$data['v_email'].'%');
+        }
 
+        $users = $query->paginate(50);
         return $this->sendResponse($users, 'Users list');
     }
-    public function tutors()
+    public function tutors(Request $request)
     {
        
         if (!Gate::allows('isAdmin')) {
             return $this->unauthorizedResponse();
         }
         // $this->authorize('isAdmin');
+        $data = $request->all();
+		$query = User::where("type",'user')->latest();
+		if(isset($data['s_name']) && !empty($data['s_name']))
+        {
+            $query->where('name','like', '%'.$data['s_name'].'%');
+        }
+		if(isset($data['s_email']) && !empty($data['s_email']))
+        {
+            $query->where('email','like', '%'.$data['s_email'].'%');
+        }
 
-        $users = User::where("type",'user')->latest()->paginate(10);
+        $users = $query->paginate(50);
 
         return $this->sendResponse($users, 'Users list');
     }
@@ -206,7 +240,7 @@ class UserController extends BaseController
 
    
 
-    public function transactions()
+    public function transactions(Request $request)
     {
        
         if (!Gate::allows('isAdmin')) {
@@ -214,7 +248,31 @@ class UserController extends BaseController
         }
         // $this->authorize('isAdmin');
 
-        $users = UserSubscription::with(["course","user"])->latest()->paginate(10);
+        $data = $request->all();
+		$query = UserSubscription::with(["course","user"])->latest()->latest();
+		if(isset($data['v_name']) && !empty($data['v_name']))
+        {
+            $query->whereHas('user', function($q) use($data){
+                $q->where('name','like', '%'.$data['v_name'].'%');
+            });
+        }
+        if(isset($data['t_id']) && !empty($data['t_id']))
+        {
+                $query->where('transaction_id','like', '%'.$data['t_id'].'%');
+        }
+        if(isset($data['v_email']) && !empty($data['v_email']))
+        {
+            $query->whereHas('user', function($q) use($data){
+                $q->where('email','like', '%'.$data['v_email'].'%');
+            });
+        }
+		if(isset($data['c_id']) && !empty($data['c_id']))
+        {
+            $query->where('course_id', $data['c_id']);
+        }
+        
+
+        $users = $query->paginate(50);
 
         return $this->sendResponse($users, 'User Subscription list');
     }

@@ -35,6 +35,22 @@
 					  <th>Status</th>
                       <th>Action</th>
                     </tr>
+                     <tr>
+                      <th><input v-model="v_name" type="text" name="v_name" class="form-control" ></th>
+                      <th><select class="form-control"   v-model="c_id" >
+							 <option value=""  :selected="courses.length == 0">Select</option>
+                              <option 
+                                  v-for="(cat,index) in courses" :key="index"
+                                  :value="index"
+                                  :selected="index == form.course_id">{{ cat }}</option>
+                            </select></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+					  <th></th>
+                      <th></th>
+                    </tr>
                   </thead>
                   <tbody>
                      <tr v-for="data in listData.data" :key="data.id">
@@ -122,6 +138,8 @@
                     id : '',
 					status: false,
                 }),
+                 v_name:'',
+                c_id:'',
 				courses: [],
             }
         },
@@ -131,21 +149,16 @@
 				this.loading = true
                   this.$Progress.start();
                   
-                  axios.get('/api/video-review?page=' + page).then(({ data }) => {this.listData = data.data;
+                  axios.get('/api/video-review?page=' + page,{ params: {v_name: this.v_name,c_id: this.c_id}}).then(({ data }) => {this.listData = data.data;
 				  this.loading = false
 				  });
 
                   this.$Progress.finish();
             },
-			 loadData(){
-				this.loading = true
-                if(this.$gate.isAdmin()){
-                    axios.get("/api/video-review").then(({ data }) => {this.listData = data.data;
-					this.loading = false
-					});
-                }
-            },
+			loadCourses(){
 			
+              axios.get("/api/course/list").then(({ data }) => (this.courses = data.data));
+            },
             updateResult(){
                 this.$Progress.start();
                 this.form.post('/api/update-review-status')
@@ -159,7 +172,7 @@
                     this.$Progress.finish();
                         //  Fire.$emit('AfterCreate');
 
-                    this.loadData();
+                    this.getResults();
                 })
                 .catch(() => {
                     this.$Progress.fail();
@@ -202,7 +215,7 @@
                                       'success'
                                       );
                                   // Fire.$emit('AfterCreate');
-                                  this.loadData();
+                                  this.getResults();
                               }).catch((data)=> {
                                   Swal.fire("Failed!", data.message, "warning");
                               });
@@ -212,10 +225,19 @@
 
         },
         mounted() {
-            console.log('Component mounted.')
+           this.getResults();
+        },
+        watch: {
+            v_name(after, before) {
+                this.getResults();
+            },
+            c_id(after, before) {
+                this.getResults();
+            }
         },
         created() {
-			this.loadData();
+             this.loadCourses();
+			this.getResults();
             this.$Progress.start();
             this.$Progress.finish();
         }
