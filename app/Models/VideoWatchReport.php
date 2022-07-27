@@ -18,4 +18,6 @@ class VideoWatchReport extends Model
     {
         return $this->hasOne(User::Class, 'id', 'user_id')->withDefault();
     }
+	
+	
 }

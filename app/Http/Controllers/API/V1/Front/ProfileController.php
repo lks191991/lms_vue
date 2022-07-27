@@ -199,7 +199,7 @@ class ProfileController extends BaseController
 		$data = $request->all();
 		$user = Auth::user();
 		$currentDate = Carbon::now()->format('Y-m-d');
-		$userSubscription = UserSubscription::with('course')->withCount(['course.videoWatchReport'])->where("user_id",Auth::guard('api')->user()->id)->where("expired_on",">=",$currentDate)->where("status",'Success')->paginate(10);
+		$userSubscription = UserSubscription::with('course')->withCount('course.videoWatchReport')->where("user_id",Auth::guard('api')->user()->id)->where("expired_on",">=",$currentDate)->where("status",'Success')->paginate(10);
 
 		return $this->sendResponse($userSubscription, 'my Courses list.');
 
