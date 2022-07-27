@@ -223,7 +223,7 @@ class ProfileController extends BaseController
 				$per = (($totalWatchVideo*100)/$totalVideo);
 			}
 			
-			if($per>75)
+			if($per>0)
 			{
 				$courseData[]['course'] = $c['course'];
 			}
