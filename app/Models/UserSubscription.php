@@ -21,5 +21,12 @@ class UserSubscription extends Model
         return $this->hasOne(User::Class, 'id', 'user_id')->withDefault();
     }
 	
+	public function videoWatchReport()
+    {
+        $query = $this->hasMany(VideoWatchReport::class, 'course_id')->where('user_id','=',  auth()->guard('api')->user()->id);
+
+        return $query;
+    }
+	
 
 }
