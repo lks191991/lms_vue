@@ -27,13 +27,35 @@
                     <tr>
                       <th>Name</th>
                       <th>Course</th>
-					  <th>Topic</th>
-					  <th>User</th>
-					  <th>Description</th>
-                       <th>Note File</th>
-					   <th>Status</th>
+                      <th>Topic</th>
+                      <th>User</th>
+                      <th>Description</th>
+                      <th>Note File</th>
+                      <th>Status</th>
                       <th>Action</th>
                     </tr>
+                      <tr>
+                        <th><input v-model="v_name" type="text" name="name" class="form-control" ></th>
+                        <th><select class="form-control" @change="loadTopics(c_id)"   v-model="c_id" >
+							 <option value=""  :selected="courses.length == 0">Select</option>
+                              <option 
+                                  v-for="(cat,index) in courses" :key="index"
+                                  :value="index"
+                                  :selected="index == form.course_id">{{ cat }}</option>
+                            </select></th>
+                        <th> <select class="form-control" v-model="t_id" >
+                             <option value="" >Select</option>
+								  <option  
+                                  v-for="(cat,index) in topics" :key="index"
+                                  :value="index"
+                                  :selected="index == form.topic_id">{{ cat }}</option>
+                            </select></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                      </tr>
                   </thead>
                   <tbody>
                      <tr v-for="video in videos.data" :key="video.id">
@@ -173,6 +195,9 @@
                 videos : {},
 				        loading: false,
                 editVideo : [],
+                v_name:'',
+                c_id:'',
+                t_id:'',
                 form: new Form({
                     id : '',
                     course_id : '',
@@ -267,25 +292,18 @@
 			this.loading = true
               this.$Progress.start();
               
-              axios.get('/api/videos?page=' + page).then(({ data }) => (this.videos = data.data));
+              axios.get('/api/videos?page=' + page,{ params: {v_name: this.v_name,c_id: this.c_id,t_id: this.t_id}}).then(({ data }) => (this.videos = data.data));
 				this.loading = false
               this.$Progress.finish();
           },
          
-		   loadVideos(){
-				this.loading = true
-                if(this.$gate.isAdmin()){
-                    axios.get("/api/videos").then(({ data }) => {this.videos = data.data;
-					this.loading = false
-					});
-                }
-            },
           loadCourses(){
 			
               axios.get("/api/course/list").then(({ data }) => (this.courses = data.data));
           },
 		  loadTopics(id){
 			  this.form.topic_id = '';
+        this.t_id ='';
 				return axios.get("/api/topics/bycourse?course="+id, {
 				}).then(({ data }) => {
 				this.topics = data.data
@@ -360,7 +378,7 @@
                         title: data.data.message
                     });
                   this.$Progress.finish();
-                  this.loadVideos();
+                  this.getResults();
 
                 } else {
 					this.allerros = error.response.data.errors;
@@ -403,7 +421,7 @@
                   this.$Progress.finish();
                       //  Fire.$emit('AfterCreate');
 					
-                  this.loadVideos();
+                  this.getResults();
               })
               .catch((error) => {
 				  this.allerros = error.response.data.errors;
@@ -434,7 +452,7 @@
                                       'success'
                                       );
                                   // Fire.$emit('AfterCreate');
-                                  this.loadVideos();
+                                  this.getResults();
                               }).catch((data)=> {
                                   Swal.fire("Failed!", data.message, "warning");
                               });
@@ -444,11 +462,23 @@
 
         },
         mounted() {
+           this.getResults();
         },
+    watch: {
+        v_name(after, before) {
+            this.getResults();
+        },
+        c_id(after, before) {
+            this.getResults();
+        },
+        t_id(after, before) {
+            this.getResults();
+        }
+    },
         created() {
             this.$Progress.start();
 
-            this.loadVideos();
+            this.getResults();
             this.loadCourses();
             this.$Progress.finish();
 			

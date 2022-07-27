@@ -30,6 +30,24 @@
                       <th>Amount</th>
                       <th>Discount</th>
                     </tr>
+                    <tr>
+                      <th><input v-model="t_id" type="text" name="t_id" class="form-control" ></th>
+                      <th><input v-model="v_name" type="text" name="v_name" class="form-control" ></th>
+                      <th><input v-model="v_email" type="text" name="v_email" class="form-control" ></th>
+                      <th><select class="form-control"   v-model="c_id" >
+							 <option value=""  :selected="courses.length == 0">Select</option>
+                              <option 
+                                  v-for="(cat,index) in courses" :key="index"
+                                  :value="index"
+                                  >{{ cat }}</option>
+                            </select></th>
+                      
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                    </tr>
                   </thead>
                   <tbody>
                      <tr v-for="payment in payments.data" :key="payment.id">
@@ -75,6 +93,11 @@
             return {
                 editmode: false,
                 payments : {},
+                v_name:'',
+                v_email:'',
+                t_id:'',
+                c_id:'',
+                courses: [],
             }
         },
         methods: {
@@ -83,30 +106,38 @@
 
                   this.$Progress.start();
                   
-                  axios.get('/api/transactions?page=' + page).then(({ data }) => (this.payments = data.data));
+                  axios.get('/api/transactions?page=' + page,{ params: {v_email: this.v_email,v_name: this.v_name,t_id: this.t_id,c_id: this.c_id}}).then(({ data }) => (this.payments = data.data));
 
                   this.$Progress.finish();
             },
-           
-          loadUsers(){
-            this.$Progress.start();
-
-            if(this.$gate.isAdmin()){
-              axios.get("/api/transactions").then(({ data }) => (this.payments = data.data));
-            }
-
-            this.$Progress.finish();
-          },
-          
+			loadCourses(){
+			
+              axios.get("/api/course/list").then(({ data }) => (this.courses = data.data));
+            },
 
         },
         mounted() {
-            console.log('User Component mounted.')
+           this.getResults();
+        },
+        watch: {
+            v_name(after, before) {
+                this.getResults();
+            },
+             v_email(after, before) {
+                this.getResults();
+            },
+             t_id(after, before) {
+                this.getResults();
+            },
+            c_id(after, before) {
+                this.getResults();
+            }
         },
         created() {
 
             this.$Progress.start();
-            this.loadUsers();
+            this.loadCourses();
+            this.getResults();
             this.$Progress.finish();
         }
     }

@@ -31,6 +31,15 @@
                       <th>Created</th>
                       <th>Action</th>
                     </tr>
+                     <tr>
+                      <th><input v-model="s_name" type="text" name="s_name" class="form-control" ></th>
+                      <th><input v-model="s_email" type="text" name="s_email" class="form-control" ></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                    </tr>
                   </thead>
                   <tbody>
                      <tr v-for="user in users.data" :key="user.id">
@@ -153,6 +162,8 @@ import Datepicker from 'vuejs-datepicker'
                 editmode: false,
                 loading: false,
                 users : {},
+                s_name:'',
+                s_email:'',
                 form: new Form({
                     id : '',
                     type : 'student',
@@ -161,6 +172,7 @@ import Datepicker from 'vuejs-datepicker'
                     dob:'',
                     email: '',
                     password: '',
+                   
                     status: false,
                     email_verified_at: null,
                 })
@@ -171,7 +183,7 @@ import Datepicker from 'vuejs-datepicker'
 
                   this.$Progress.start();
                   this.loading = true;
-                  axios.get('/api/students?page=' + page).then(({ data }) => (this.users = data.data));
+                  axios.get('/api/students?page=' + page,{ params: {s_name: this.s_name,s_email: this.s_email}}).then(({ data }) => (this.users = data.data));
                     this.loading = false;
                   this.$Progress.finish();
             },
@@ -189,7 +201,7 @@ import Datepicker from 'vuejs-datepicker'
                     this.$Progress.finish();
                         //  Fire.$emit('AfterCreate');
 
-                    this.loadUsers();
+                    this.getResults();
                 })
                 .catch(() => {
                     this.$Progress.fail();
@@ -246,24 +258,13 @@ import Datepicker from 'vuejs-datepicker'
                                         'success'
                                         );
                                     // Fire.$emit('AfterCreate');
-                                    this.loadUsers();
+                                    this.getResults();
                                 }).catch((data)=> {
                                   Swal.fire("Failed!", data.message, "warning");
                               });
                          }
                     })
             },
-          loadUsers(){
-            this.$Progress.start();
-            this.loading = true;
-            if(this.$gate.isAdmin()){
-              axios.get("/api/students").then(({ data }) => {this.users = data.data
-              console.log( data);
-              });
-            }
-            this.loading = false;
-            this.$Progress.finish();
-          },
           
           createUser(){
 
@@ -277,7 +278,7 @@ import Datepicker from 'vuejs-datepicker'
                   });
 
                   this.$Progress.finish();
-                  this.loadUsers();
+                  this.getResults();
 
               })
               .catch(()=>{
@@ -291,12 +292,21 @@ import Datepicker from 'vuejs-datepicker'
 
         },
         mounted() {
-            console.log('User Component mounted.')
+             this.getResults();
+        }
+        ,
+         watch: {
+        s_name(after, before) {
+            this.getResults();
         },
+            s_email(after, before) {
+            this.getResults();
+        }
+    },
         created() {
 
             this.$Progress.start();
-            this.loadUsers();
+            this.getResults();
             this.$Progress.finish();
         }
     }

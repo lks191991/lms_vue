@@ -129,6 +129,7 @@ class RegisterController extends BaseController
            $oClient = OClient::where('password_client', 1)->first();
            // $success['token'] =  $user->createToken('MyApp')->accessToken; 
             $success['name'] =  $user->name;
+            $success['image'] =  $user->image;
             $success['email'] =  $user->email;
             $success['TokenAndRefreshToken'] = $this->getTokenAndRefreshToken($oClient, $request->email, $request->password);
    

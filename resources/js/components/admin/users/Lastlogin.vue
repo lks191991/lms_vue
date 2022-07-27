@@ -25,6 +25,12 @@
                       <th>Contact</th>
                       <th>Last Login</th>
                     </tr>
+                     <tr>
+                      <th><input v-model="v_name" type="text" name="v_name" class="form-control" ></th>
+                      <th><input v-model="v_email" type="text" name="v_email" class="form-control" ></th>
+                      <th></th>
+                      <th></th>
+                    </tr>
                   </thead>
                   <tbody>
                      <tr v-for="user in users.data" :key="user.id">
@@ -68,6 +74,8 @@ import Datepicker from 'vuejs-datepicker'
                 editmode: false,
                 loading: false,
                 users : {},
+                v_name:'',
+                v_email:'',
             }
         },
         methods: {
@@ -75,33 +83,27 @@ import Datepicker from 'vuejs-datepicker'
 
                   this.$Progress.start();
                   this.loading = true;
-                  axios.get('/api/user-last-login?page=' + page).then(({ data }) => (this.users = data.data));
+                  axios.get('/api/user-last-login?page=' + page,{ params: {v_name: this.v_name,v_email: this.v_email}}).then(({ data }) => (this.users = data.data));
                     this.loading = false;
                   this.$Progress.finish();
-            },
-            
-          loadUsers(){
-            this.$Progress.start();
-            this.loading = true;
-            if(this.$gate.isAdmin()){
-              axios.get("/api/user-last-login").then(({ data }) => {this.users = data.data
-              console.log( data);
-              });
             }
-            this.loading = false;
-            this.$Progress.finish();
-          },
-          
-          
 
         },
         mounted() {
-            console.log('User Component mounted.')
+           this.getResults();
+        },
+        watch: {
+            v_name(after, before) {
+                this.getResults();
+            },
+            v_email(after, before) {
+                this.getResults();
+            }
         },
         created() {
 
             this.$Progress.start();
-            this.loadUsers();
+            this.getResults();
             this.$Progress.finish();
         }
     }

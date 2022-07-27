@@ -31,10 +31,24 @@ class QnsAnsController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $results = $this->qnsans->latest()->with('course','topic','video')->paginate(10);
+        $data = $request->all();
+		$query = $this->qnsans->latest()->with('course','topic','video');
+		if(isset($data['v_name']) && !empty($data['v_name']))
+        {
+            $query->where('question','like', '%'.$data['v_name'].'%');
+        }
+		if(isset($data['c_id']) && !empty($data['c_id']))
+        {
+            $query->where('course_id', $data['c_id']);
+        }
+        if(isset($data['t_id']) && !empty($data['t_id']))
+        {
+            $query->where('topic_id', $data['t_id']);
+        }
 
+        $results = $query->paginate(50);
         return $this->sendResponse($results, 'Question list');
     }
 

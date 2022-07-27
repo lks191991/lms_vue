@@ -40,6 +40,31 @@
                     <th>Created</th>
                     <th>Action</th>
                     </tr>
+                    <tr>
+                    <th><select class="form-control" @change="loadTopics(c_id)"   v-model="c_id" >
+							 <option value=""  :selected="courses.length == 0">Select</option>
+                              <option 
+                                  v-for="(cat,index) in courses" :key="index"
+                                  :value="index"
+                                  :selected="index == form.course_id">{{ cat }}</option>
+                            </select></th>
+                    <th><select class="form-control" v-model="t_id" >
+                             <option value="" >Select</option>
+								  <option  
+                                  v-for="(cat,index) in topics" :key="index"
+                                  :value="index"
+                                  :selected="index == form.topic_id">{{ cat }}</option>
+                            </select></th>
+                    <th></th>
+                    <th><input v-model="v_name" type="text" name="v_name" class="form-control" ></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    </tr>
                   </thead>
                   <tbody>
                      <tr v-for="qa in questions.data" :key="qa.id">
@@ -208,6 +233,9 @@
                 editmode: false,
 				loading: false,
                 questions : {},
+                  v_name:'',
+                c_id:'',
+                t_id:'',
                 form: new Form({
                     id : '',
                     course_id: '',
@@ -231,19 +259,11 @@
 				this.loading = true
                   this.$Progress.start();
                   
-                  axios.get('/api/questions?page=' + page).then(({ data }) => {this.questions = data.data;
+                  axios.get('/api/questions?page=' + page,{ params: {v_name: this.v_name,c_id: this.c_id,t_id: this.t_id}}).then(({ data }) => {this.questions = data.data;
 				  this.loading = false
 				  });
 
                   this.$Progress.finish();
-            },
-             loadQuestions(){
-				this.loading = true
-                if(this.$gate.isAdmin()){
-                    axios.get("/api/questions").then(({ data }) => {this.questions = data.data;
-					this.loading = false
-					});
-                }
             },
 			loadCourses(){
 			
@@ -251,6 +271,7 @@
             },
             loadTopics(id){
 			  this.form.topic_id = '';
+              this.t_id ='';
 				return axios.get("/api/topics/bycourse?course="+id, {
 				}).then(({ data }) => {
 				this.topics = data.data
@@ -288,7 +309,7 @@
                     this.$Progress.finish();
                         //  Fire.$emit('AfterCreate');
 
-                    this.loadQuestions();
+                    this.getResults();
                 })
                 .catch(() => {
                     this.$Progress.fail();
@@ -333,7 +354,7 @@
                     });
 
                     this.$Progress.finish();
-                    this.loadQuestions();
+                    this.getResults();
                 })
                 .catch(()=>{
                     Toast.fire({
@@ -361,7 +382,7 @@
                                       'success'
                                       );
                                   // Fire.$emit('AfterCreate');
-                                  this.loadQuestions();
+                                  this.getResults();
                               }).catch((data)=> {
                                   Swal.fire("Failed!", data.message, "warning");
                               });
@@ -371,12 +392,23 @@
 
         },
         mounted() {
-            console.log('Component mounted.')
+           this.getResults();
         },
+    watch: {
+        v_name(after, before) {
+            this.getResults();
+        },
+        c_id(after, before) {
+            this.getResults();
+        },
+        t_id(after, before) {
+            this.getResults();
+        }
+    },
         created() {
 
             this.$Progress.start();
-             this.loadQuestions();
+             this.getResults();
             this.loadCourses();
             this.$Progress.finish();
         }
