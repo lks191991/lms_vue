@@ -58,6 +58,7 @@ Route::namespace('App\\Http\\Controllers\\API\V1\Front')->group(function () {
 		Route::post('payment', 'PaymentController@stripePost');
 		Route::post('my-payment', 'PaymentController@myPayments');
 		Route::post('my-courses', 'ProfileController@myCourses');
+		Route::post('my-completed-courses', 'ProfileController@myCompletedCourses');
 		Route::post('my-course-details', 'ProfileController@myCourseDetails');
 		Route::post('video-view-update', 'ProfileController@videoViewUpdate');
 		Route::post('give-rating', 'ProfileController@ratingInsert');

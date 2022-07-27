@@ -205,6 +205,34 @@ class ProfileController extends BaseController
 
 	}
 	
+	public function myCompletedCourses(Request $request)
+    {
+		$data = $request->all();
+		$user = Auth::user();
+		$currentDate = Carbon::now()->format('Y-m-d');
+		$userSubscription = UserSubscription::with('course')->withCount('videoWatchReport')->where("user_id",Auth::guard('api')->user()->id)->where("expired_on",">=",$currentDate)->where("status",'Success')->get();
+		
+		$courseData = [];
+		foreach($userSubscription as $c)
+		{
+			$totalVideo = $c->course->total_video_sum;
+			$totalWatchVideo = $c->video_watch_report_count;
+			$per = 0;
+			if($totalWatchVideo > 0)
+			{
+				$per = (($totalWatchVideo*100)/$totalVideo);
+			}
+			
+			if($per>75)
+			{
+				$courseData[]['course'] = $c['course'];
+			}
+			
+		}
+		return $this->sendResponse($courseData, 'my Courses list.');
+
+	}
+	
 	public function myCourseDetails(Request $request)
     {
         $data = $request->all();
