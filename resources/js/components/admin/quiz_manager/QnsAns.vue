@@ -139,8 +139,8 @@
                         <div class="form-group col-md-6">
 
                             <label>Topic</label>
-                            <select class="form-control" v-model="form.topic_id" :class="{ 'is-invalid': form.errors.has('topic_id') }">
-                             <option value="" >Select</option>
+                            <select class="form-control" v-model="form.topic_id" @change="loadVideos(form.topic_id)" :class="{ 'is-invalid': form.errors.has('topic_id') }">
+                             <option value="" :selected="topics.length == 0" >Select</option>
 								  <option  
                                   v-for="(cat,index) in topics" :key="index"
                                   :value="index"
@@ -152,9 +152,9 @@
 
                             <label>Video</label>
                             <select class="form-control" v-model="form.video_id" :class="{ 'is-invalid': form.errors.has('video_id') }">
-                             <option value="" >Select</option>
+                             <option value=""  :selected="videos.length == 0" >Select</option>
 								  <option  
-                                  v-for="(cat,index) in topics" :key="index"
+                                  v-for="(cat,index) in videos" :key="index"
                                   :value="index"
                                   :selected="index == form.video_id">{{ cat }}</option>
                             </select>
@@ -236,6 +236,7 @@
                   v_name:'',
                 c_id:'',
                 t_id:'',
+                v_id:'',
                 form: new Form({
                     id : '',
                     course_id: '',
@@ -251,6 +252,7 @@
                 }),
 				 courses: [],
                 topics: [],
+                videos: [],
             }
         },
         methods: {
@@ -278,6 +280,15 @@
 				return data.data
 				});
           },
+            loadVideos(id){
+			  this.form.video_id = '';
+              this.v_id ='';
+				return axios.get("/api/videos-bytopics?topic="+id, {
+				}).then(({ data }) => {
+				this.videos = data.data
+				return data.data
+				});
+          },
 		  
 			async chieldCategorySelect(){
 				
@@ -294,6 +305,23 @@
 			  this.form.topic_id = '';
 			  if(catCheck){
 				  this.form.topic_id = question.topic_id;
+			  } 
+			},
+            async chieldCategorySelectOne(){
+				
+				 let question = this.editVideo;
+				
+				 let vl = await this.loadVideos(question.topic_id);
+				 let catCheck = false;
+			   _.each(this.videos, (value, key) => {
+				  if(key==question.video_id){
+						catCheck = true;
+				  } 
+				});
+			  
+			  this.form.video_id = '';
+			  if(catCheck){
+				  this.form.video_id = question.video_id;
 			  } 
 			},
             updateData(){
@@ -331,6 +359,7 @@
                 this.form.fill(question);
 			  this.editVideo = question;
 			  this.chieldCategorySelect();
+              this.chieldCategorySelectOne();
 				
 			  $('#addNew').modal('show');
 			  //console.log(product);

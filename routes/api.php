@@ -80,7 +80,8 @@ Route::namespace('App\\Http\\Controllers\\API\V1')->group(function () {
 	Route::get('sub-category/bycategory', 'CommonController@getSubCategorySelect');
 	Route::get('course/bycategoryorsub', 'CommonController@getCoursesSelect');
     Route::get('topics/bycourse', 'CommonController@getTopicByCourseSelect');
-	
+	Route::get('videos-bytopics', 'CommonController@getVideoByTopicSelect');
+
     Route::get('profile', 'ProfileController@profile');
     Route::put('profile', 'ProfileController@updateProfile');
     Route::post('change-password', 'ProfileController@changePassword');

@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\SubCategory;
 use App\Models\Course;
 use App\Models\Topic;
+use App\Models\Video;
 use Illuminate\Http\Request;
 use App\Http\Requests\Products\SubCategoryRequest;
 
@@ -84,6 +85,21 @@ class CommonController extends BaseController
 		}
 		
         return $this->sendResponse($courses, 'Topic list');
+    }
+
+	public function getVideoByTopicSelect(Request $request)
+    {
+		$data = $request->all();
+		if(isset($data['topic']) && !empty($data['topic']))
+		{
+			$videos = Video::where('topic_id',$data['topic'])->pluck('name', 'id');
+		}
+		else
+		{
+			$videos = Video::pluck('name', 'id');
+		}
+		
+        return $this->sendResponse($videos, 'Topic list');
     }
 
 }
